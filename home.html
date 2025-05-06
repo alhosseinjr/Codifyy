@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Codify</title>
+    <style>
+        body {
+            font-family: 'Cairo', 'Segoe UI', Arial, sans-serif;
+            color: #f6f8fa;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #181c2b 0%, #232b47 60%, #1a2a3a 100%);
+            position: relative;
+            overflow-x: hidden;
+        }
+        .tech-bg-home {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.22;
+        }
+        .fade-out {
+            opacity: 0;
+            transform: scale(0.97);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        header {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 28px 12px 38px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            background: none;
+        }
+        .site-name {
+            font-size: 2.3rem;
+            color: #00e5c0;
+            font-weight: bold;
+            text-decoration: none;
+            letter-spacing: 2.5px;
+            text-shadow: 0 2px 16px #00e5c055;
+            transition: color 0.2s;
+        }
+        .site-name:hover {
+            color: #FFD600;
+        }
+        nav {
+            background: rgba(24, 28, 43, 0.97);
+            padding: 4px 10px 4px 16px;
+            border-radius: 18px;
+            box-shadow: 0 4px 32px #00e5c033;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 1200;
+            min-height: 36px;
+            margin-left: auto;
+            margin-right: 50px;
+        }
+        nav a {
+            color: #CCD6F6;
+            text-decoration: none;
+            margin: 0 1px;
+            font-size: 1.04rem;
+            font-weight: 600;
+            padding: 6px 13px;
+            border-radius: 12px;
+            transition: background 0.18s, color 0.18s;
+            position: relative;
+            letter-spacing: 0.5px;
+        }
+        nav a.active, nav a:hover {
+            background: linear-gradient(90deg, #00e5c0 60%, #FFD600 100%);
+            color: #232b47;
+            box-shadow: 0 2px 12px #00e5c055;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+            padding: 0 16px;
+            position: relative;
+            z-index: 1;
+        }
+        .main-title {
+            font-size: 3.5rem;
+            color: #00e5c0;
+            font-weight: bold;
+            margin-top: 140px;
+            margin-bottom: 16px;
+            letter-spacing: 2.5px;
+            text-shadow: 0 2px 24px #00e5c055;
+        }
+        .main-desc {
+            font-size: 1.35rem;
+            color: #e0e6f6;
+            margin-bottom: 48px;
+            line-height: 1.7;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+            white-space: pre-line;
+        }
+        .section {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 90px 90px;
+            margin: 0 0 0 0;
+            row-gap: 110px;
+        }
+        .box {
+            background: rgba(36, 48, 78, 0.93);
+            padding: 36px 38px 32px 38px;
+            border-radius: 20px;
+            min-width: 320px;
+            max-width: 420px;
+            flex: 1 1 380px;
+            margin-bottom: 0;
+            text-align: left;
+            box-shadow: 0 6px 32px #00e5c022, 0 1.5px 0 #FFD60011 inset;
+            position: relative;
+            transition: transform 0.18s, box-shadow 0.18s;
+        }
+        .box:hover {
+            transform: translateY(-10px) scale(1.035);
+            box-shadow: 0 12px 40px #00e5c055, 0 1.5px 0 #FFD60022 inset;
+        }
+        .box h3 {
+            color: #FFD600;
+            font-size: 1.18rem;
+            margin-bottom: 18px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+        .cta-button {
+            background: linear-gradient(90deg, #3fa99c 60%, #c9b458 100%);
+            color: #f6f8fa;
+            padding: 14px 38px;
+            border: none;
+            border-radius: 24px;
+            font-size: 1.22rem;
+            font-weight: bold;
+            cursor: pointer;
+            display: inline-block;
+            margin-top: 14px;
+            box-shadow: 0 2px 12px #3fa99c33;
+            transition: background 0.18s, color 0.18s, box-shadow 0.18s, transform 0.18s;
+        }
+        .cta-button:hover {
+            background: linear-gradient(90deg, #c9b458 40%, #3fa99c 100%);
+            color: #FFD600;
+            box-shadow: 0 6px 24px #c9b45855;
+            transform: scale(1.04);
+        }
+        .about-box {
+            width: 100%;
+            text-align: center;
+            background: rgba(24, 28, 43, 0.98);
+            border-radius: 26px;
+            margin-top: 70px;
+            padding: 44px 18px 32px 18px;
+            box-shadow: 0 2px 18px #00e5c022;
+            position: relative;
+        }
+        .about-box .about-icon {
+            display: inline-block;
+            margin-bottom: 12px;
+        }
+        .about-box h3 {
+            color: #00e5c0;
+            font-size: 1.55rem;
+            margin-bottom: 10px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+        .about-divider {
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(90deg, #00e5c0 60%, #FFD600 100%);
+            border-radius: 2px;
+            margin: 0 auto 18px auto;
+        }
+        .about-box p {
+            color: #CCD6F6;
+            font-size: 1.12rem;
+            line-height: 1.85;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        footer {
+            text-align: center;
+            padding: 24px;
+            background: rgba(0, 0, 0, 0.19);
+            margin-top: 60px;
+        }
+        footer p {
+            font-size: 15px;
+            color: #CCD6F6;
+            letter-spacing: 0.5px;
+        }
+        @media (max-width: 900px) {
+            .section { flex-direction: column; gap: 22px; }
+            .container { margin-top: 90px; }
+            .main-title { font-size: 2.1rem; margin-top: 90px; }
+        }
+        /* الروبوت المتحرك */
+        .robot-container {
+            position: fixed;
+            left: 38px;
+            top: 100px;
+            width: 120px;
+            height: 160px;
+            z-index: 999;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .robot {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: all 0.3s ease;
+        }
+
+        .robot-body {
+            width: 100%;
+            height: 75%;
+            position: absolute;
+            background: linear-gradient(135deg, #2C3E50, #3498db);
+            border-radius: 20px;
+            box-shadow: 
+                0 5px 15px rgba(0, 229, 192, 0.4),
+                0 0 30px rgba(0, 229, 192, 0.2),
+                inset 0 0 15px rgba(52, 152, 219, 0.5);
+            overflow: hidden;
+        }
+
+        .robot-face {
+            position: absolute;
+            width: 80%;
+            height: 60%;
+            top: 20%;
+            left: 10%;
+            background: rgba(0, 229, 192, 0.1);
+            border-radius: 15px;
+            backdrop-filter: blur(5px);
+        }
+
+        .robot-eye {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: #FFD600;
+            border-radius: 50%;
+            box-shadow: 0 0 20px #FFD600;
+            animation: glow 2s infinite;
+        }
+
+        .robot-eye.left {
+            top: 40%;
+            left: 25%;
+        }
+
+        .robot-eye.right {
+            top: 40%;
+            right: 25%;
+        }
+
+        .robot-antenna {
+            position: absolute;
+            width: 8px;
+            height: 20px;
+            background: #00e5c0;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 4px;
+            box-shadow: 0 0 15px #00e5c0;
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 20px #FFD600; }
+            50% { box-shadow: 0 0 30px #FFD600, 0 0 40px #FFD600; }
+        }
+
+        /* تأثيرات الحركة */
+        .robot-container:hover {
+            transform: translateY(-5px) scale(1.05);
+        }
+
+        .robot-container:hover .robot-eye {
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 90%, 100% { transform: scaleY(1); }
+            95% { transform: scaleY(0.1); }
+        }
+
+        /* تأثير النبض عند الضغط */
+        .robot-container:active {
+            transform: scale(0.95);
+        }
+
+        .robot-container:active .robot-body {
+            box-shadow: 
+                0 2px 10px rgba(0, 229, 192, 0.3),
+                0 0 20px rgba(0, 229, 192, 0.1),
+                inset 0 0 10px rgba(52, 152, 219, 0.4);
+        }
+
+        /* الأذرع */
+        .robot-arm {
+            position: absolute;
+            width: 15px;
+            height: 50px;
+            background: linear-gradient(135deg, #2C3E50, #3498db);
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 229, 192, 0.3);
+        }
+
+        .robot-arm.left {
+            left: -20px;
+            top: 30%;
+            transform-origin: top center;
+            animation: swingLeft 3s ease-in-out infinite;
+        }
+
+        .robot-arm.right {
+            right: -20px;
+            top: 30%;
+            transform-origin: top center;
+            animation: swingRight 3s ease-in-out infinite;
+        }
+
+        @keyframes swingLeft {
+            0%, 100% { transform: rotate(-5deg); }
+            50% { transform: rotate(15deg); }
+        }
+
+        @keyframes swingRight {
+            0%, 100% { transform: rotate(5deg); }
+            50% { transform: rotate(-15deg); }
+        }
+
+        /* الأرجل */
+        .robot-leg {
+            position: absolute;
+            width: 20px;
+            height: 40px;
+            background: linear-gradient(135deg, #2C3E50, #3498db);
+            border-radius: 8px;
+            bottom: -35px;
+            box-shadow: 0 0 10px rgba(0, 229, 192, 0.3);
+        }
+
+        .robot-leg.left {
+            left: 25%;
+            animation: walkLeft 3s ease-in-out infinite;
+        }
+
+        .robot-leg.right {
+            right: 25%;
+            animation: walkRight 3s ease-in-out infinite;
+        }
+
+        @keyframes walkLeft {
+            0%, 100% { transform: rotate(-5deg); }
+            50% { transform: rotate(5deg); }
+        }
+
+        @keyframes walkRight {
+            0%, 100% { transform: rotate(5deg); }
+            50% { transform: rotate(-5deg); }
+        }
+
+        /* تحديث حركة القفز */
+        @keyframes jump {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .robot-container:hover .robot-arm.left { animation: swingLeft 1.5s ease-in-out infinite; }
+        .robot-container:hover .robot-arm.right { animation: swingRight 1.5s ease-in-out infinite; }
+        .robot-container:hover .robot-leg.left { animation: walkLeft 1.5s ease-in-out infinite; }
+        .robot-container:hover .robot-leg.right { animation: walkRight 1.5s ease-in-out infinite; }
+    </style>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+    // تشغيل تأثير الدخول عند تحميل الصفحة
+    document.body.classList.add("loaded");
+
+    // إضافة تأثير الخروج عند الضغط على أي رابط
+    document.querySelectorAll("a").forEach(link => {
+        link.addEventListener("click", function (e) {
+            e.preventDefault(); // منع الانتقال الفوري
+            let targetUrl = this.href; // حفظ الرابط اللي المفروض يروح له
+
+            // إضافة كلاس الأنيميشن
+            document.body.classList.add("fade-out");
+
+            // انتظار نصف ثانية ثم الانتقال للصفحة
+            setTimeout(() => {
+                window.location.href = targetUrl;
+                             }, 500);
+                             });
+                        });
+                       });
+
+    // كود إظهار اسم المستخدم وزر تسجيل الخروج إذا كان مسجلاً الدخول
+    (function() {
+        const userBox = document.getElementById('userBox');
+        const userName = localStorage.getItem('userName');
+        const token = localStorage.getItem('token');
+        if (token && userName) {
+            userBox.innerHTML = `<span style='color:#00e5c0;font-weight:bold;font-size:1.08rem;margin-right:10px;'>👤 ${userName}</span><button onclick="logoutUser()" style="background:linear-gradient(90deg,#c94,#3fa99c);color:#fff;border:none;border-radius:8px;padding:6px 16px;font-size:0.98rem;cursor:pointer;box-shadow:0 2px 8px #3fa99c33;">Logout</button>`;
+        } else {
+            userBox.innerHTML = '';
+        }
+    })();
+
+    function logoutUser() {
+        localStorage.removeItem('token');
+        localStorage.removeItem('userName');
+        localStorage.removeItem('userEmail');
+        window.location.href = 'Login&Signup.html';
+    }
+    </script>
+</head>
+<body>
+    <div class="tech-bg-home">
+        <svg width="100%" height="100%" viewBox="0 0 1920 1080" fill="none" xmlns="http://www.w3.org/2000/svg" style="position:absolute;top:0;left:0;">
+            <defs>
+                <linearGradient id="circuitLineHome" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0%" stop-color="#00e5c0" stop-opacity="0.22"/>
+                    <stop offset="100%" stop-color="#FFD600" stop-opacity="0.16"/>
+                </linearGradient>
+            </defs>
+            <polyline points="120,180 400,180 420,260 800,260" stroke="url(#circuitLineHome)" stroke-width="3.2" fill="none"/>
+            <polyline points="120,400 350,400 370,480 800,480" stroke="url(#circuitLineHome)" stroke-width="3.2" fill="none"/>
+            <polyline points="120,650 500,650 520,730 800,730" stroke="url(#circuitLineHome)" stroke-width="3.2" fill="none"/>
+            <polyline points="1800,300 1500,300 1480,380 1100,380" stroke="url(#circuitLineHome)" stroke-width="3.2" fill="none"/>
+            <polyline points="1800,600 1570,600 1550,680 1100,680" stroke="url(#circuitLineHome)" stroke-width="3.2" fill="none"/>
+            <rect x="900" y="120" width="260" height="80" rx="18" stroke="#00e5c0" stroke-width="2.5" fill="none" opacity="0.13"/>
+            <rect x="1200" y="320" width="260" height="80" rx="18" stroke="#FFD600" stroke-width="2.5" fill="none" opacity="0.13"/>
+            <rect x="1200" y="520" width="260" height="80" rx="18" stroke="#00e5c0" stroke-width="2.5" fill="none" opacity="0.13"/>
+            <circle cx="600" cy="300" r="110" stroke="#00e5c0" stroke-width="3" fill="none" opacity="0.10"/>
+            <circle cx="1500" cy="800" r="150" stroke="#FFD600" stroke-width="3" fill="none" opacity="0.12"/>
+            <circle cx="1000" cy="500" r="90" stroke="#00e5c0" stroke-width="2.5" fill="none" opacity="0.09"/>
+        </svg>
+    </div>
+    <header>
+        <a href="home.html" class="site-name">CODIFY</a>
+        <nav id="mainNav">
+            <a href="home.html">HOME</a>
+            <a href="profile.html">PROFILE</a>
+            <a href="tracks.html">TRACKS</a>
+            <a href="roadmaps.html">ROADMAPS</a>
+        </nav>
+        <div id="userBox" style="margin-left: 18px;"></div>
+    </header>
+
+    <div class="container">
+        <div class="main-title">Welcome to Codify</div>
+        <div class="main-desc">Your all-in-one platform for mastering programming, exploring tracks, and tracking your progress. Start your journey, challenge yourself, and join a vibrant community of learners!</div>
+        <div class="section">
+            <div class="box">
+                <h3>Find what's right for you.</h3>
+                <a href="roadmaps.html"><button class="cta-button">ROADMAPS</button></a>
+            </div>
+            <div class="box">
+                <h3>Start your learning journey!<br>Explore our diverse courses<br>and begin your path to success.</h3>
+                <a href="tracks.html"><button class="cta-button">EXPLORE TRACKS</button></a>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="box">
+                <h3>Discover the essential courses<br>that bridge different<br>programming fields.</h3>
+                <a href="common.html"><button class="cta-button">COMMON COURSES</button></a>
+            </div>
+            <div class="box">
+                <h3>Every step is a progress!<br>Check your exam scores and<br>keep improving.</h3>
+                <a href="Quizzes.html"><button class="cta-button">QUIZZES</button></a>
+            </div>
+        </div>
+
+        <div class="about-box">
+            <span class="about-icon">
+                <svg width="38" height="38" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="19" cy="19" r="18" stroke="#00e5c0" stroke-width="2.5" fill="#181c2b"/>
+                    <path d="M12 25L19 13L26 25" stroke="#FFD600" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="19" cy="28" r="2" fill="#FFD600"/>
+                </svg>
+            </span>
+            <h3>About Codify</h3>
+            <div class="about-divider"></div>
+            <p>Codify is your modern companion for mastering programming and computer engineering.<br>
+            We offer curated learning tracks, essential course recommendations, and smart progress tracking—all in one place.<br>
+            Our mission: Empower you to explore, switch, and complete your learning journey with clarity, confidence, and community.</p>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Codify. All rights reserved.</p>
+    </footer>
+
+    <div class="robot-container">
+        <div class="robot">
+            <div class="robot-antenna"></div>
+            <div class="robot-arm left"></div>
+            <div class="robot-arm right"></div>
+            <div class="robot-body">
+                <div class="robot-face">
+                    <div class="robot-eye left"></div>
+                    <div class="robot-eye right"></div>
+                </div>
+            </div>
+            <div class="robot-leg left"></div>
+            <div class="robot-leg right"></div>
+        </div>
+    </div>
+
+    <script>
+        // تفاعلات الروبوت مع الماوس
+        const robotContainer = document.querySelector('.robot-container');
+        const robot = document.querySelector('.robot');
+
+        // تحريك الروبوت مع حركة الماوس
+        document.addEventListener('mousemove', (e) => {
+            const mouseX = e.clientX / window.innerWidth - 0.5;
+            const mouseY = e.clientY / window.innerHeight - 0.5;
+            
+            if (Math.abs(e.clientX - robotContainer.getBoundingClientRect().left) < 200 &&
+                Math.abs(e.clientY - robotContainer.getBoundingClientRect().top) < 200) {
+                robot.style.transform = `
+                    rotateY(${mouseX * 30}deg)
+                    rotateX(${-mouseY * 30}deg)
+                `;
+            }
+        });
+
+        // تفاعل الروبوت مع السكرول
+        window.addEventListener('scroll', () => {
+            const scrollPercent = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight));
+            const robot = document.querySelector('.robot');
+            
+            robot.style.transform = `
+                rotateY(${Math.sin(scrollPercent * Math.PI * 2) * 20}deg)
+                rotateX(${Math.cos(scrollPercent * Math.PI * 2) * 20}deg)
+                translateY(${Math.sin(scrollPercent * Math.PI) * 10}px)
+            `;
+        });
+
+        // تفاعل عند النقر على الروبوت
+        robotContainer.addEventListener('click', () => {
+            robot.style.animation = 'none';
+            robot.offsetHeight; // trigger reflow
+            robot.style.animation = 'jump 0.5s ease';
+        });
+    </script>
+</body>
+</html>

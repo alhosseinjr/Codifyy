@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quizzes</title>
+<style>
+        body {
+            font-family: 'Inter', Arial, sans-serif;
+            color: white;
+            background: linear-gradient(135deg, #0a192f 0%, #112240 100%);
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            position: relative;
+            overflow-x: hidden;
+        }
+        /* خلفية تقنية SVG */
+        .tech-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.18;
+        }
+        /* جعل الكويزات بشكل عمودي */
+        .stepper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 40px;
+            margin-bottom: 50px;
+            flex-wrap: wrap;
+        }
+        .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+        .circle {
+            margin-right: 0;
+            margin-bottom: 0;
+        }
+        .step-label {
+            margin-top: 10px;
+            margin-right: 0;
+            text-align: center;
+            max-width: 90px;
+        }
+        .step .start-btn {
+            margin-top: 12px;
+            margin-left: 0;
+        }
+        @media (max-width: 700px) {
+            .center-code-bg { font-size: 0.8rem; max-width: 90vw; }
+            .step-label { font-size: 0.9rem; max-width: 120px; }
+        }
+header {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            background: none;
+        }
+.site-name {
+            font-size: 2.3rem;
+            color: #00e5c0;
+            font-weight: bold;
+            text-decoration: none;
+            letter-spacing: 2.5px;
+            text-shadow: 0 2px 16px #00e5c055;
+            transition: color 0.2s;
+        }
+.site-name:hover {
+            color: #FFD600;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 120px auto 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+        h1 {
+            color: #00e5c0;
+            text-align: center;
+            margin-bottom: 40px;
+            letter-spacing: 1px;
+}
+        .loading {
+    text-align: center;
+            color: #CCD6F6;
+            margin: 40px 0;
+}
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0; top: 0; width: 100vw; height: 100vh;
+            background: rgba(0,0,0,0.7);
+            align-items: center;
+            justify-content: center;
+        }
+        .modal.active {
+            display: flex;
+        }
+        .modal-content {
+            background: #1c3d5a;
+            padding: 30px 25px;
+            border-radius: 15px;
+            min-width: 320px;
+            max-width: 95vw;
+            color: #fff;
+            position: relative;
+        }
+        .modal-content h2 {
+    color: #00e5c0;
+            margin-bottom: 20px;
+}
+        .modal-content .close-btn {
+            position: absolute;
+            top: 10px; right: 15px;
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        .question {
+            margin-bottom: 20px;
+        }
+        .question label {
+            display: block;
+            margin-bottom: 8px;
+        }
+        .question input[type="radio"] {
+            margin-right: 8px;
+}
+        .modal-content button[type="submit"] {
+            background: #00e5c0;
+            color: #1b3b5f;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-top: 10px;
+}
+        .modal-content .result-message {
+            margin-top: 20px;
+            font-size: 1.1rem;
+}
+        /* شبكة التراكات (3 أعمدة في كل صف) */
+        .tracks-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+            gap: 40px 32px;
+            margin-bottom: 40px;
+        }
+        .track-col {
+            background: rgba(17,34,64,0.85);
+            border-radius: 18px;
+            padding: 24px 18px 18px 18px;
+            box-shadow: 0 4px 24px #0002;
+            min-width: 260px;
+            min-height: 320px;
+            position: relative;
+        }
+        .track-title {
+            color: #00e5c0;
+    text-align: center;
+            font-size: 1.25rem;
+            margin-bottom: 18px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+        .vertical-stepper {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0;
+            position: relative;
+        }
+        .v-step {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            position: relative;
+            min-height: 70px;
+        }
+        .v-circle {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #233554 60%, #00e5c0 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            color: #fff;
+            font-weight: bold;
+            border: 3px solid #00e5c0;
+            box-shadow: 0 2px 12px #00e5c055;
+            transition: box-shadow 0.3s, border 0.3s, background 0.2s;
+            z-index: 2;
+            cursor: pointer;
+        }
+        .v-circle.locked {
+            background: #233554;
+            color: #8892b0;
+            border: 3px solid #233554;
+            box-shadow: none;
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .v-circle:not(.locked):hover {
+            box-shadow: 0 0 0 4px #00e5c055;
+            background: linear-gradient(135deg, #00e5c0 60%, #233554 100%);
+        }
+        .v-circle.passed {
+            background: linear-gradient(135deg, #00e5c0 60%, #4CAF50 100%);
+            border: 3px solid #4CAF50;
+        }
+        .v-circle.failed {
+            background: linear-gradient(135deg, #233554 60%, #ff6b6b 100%);
+            border: 3px solid #ff6b6b;
+        }
+        .v-step-label {
+            margin-left: 16px;
+            color: #CCD6F6;
+            font-size: 1rem;
+            text-align: left;
+            max-width: 180px;
+            font-weight: 500;
+        }
+        .v-step .start-btn {
+            margin-left: auto;
+            background: #00e5c0;
+            color: #1b3b5f;
+            border: none;
+            padding: 7px 18px;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.2s;
+            font-weight: 500;
+        }
+        .v-step .start-btn:disabled {
+            background: #888;
+            color: #eee;
+            cursor: not-allowed;
+        }
+        /* الخط الرأسي بين الدوائر فقط */
+        .v-step:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            left: 21px;
+            top: 44px;
+            width: 2.5px;
+            height: calc(100% - 44px);
+            background: linear-gradient(180deg, #00e5c0 60%, #233554 100%);
+            z-index: 1;
+            opacity: 0.5;
+        }
+        @media (max-width: 1100px) {
+            .tracks-grid { grid-template-columns: 1fr 1fr; }
+        }
+        @media (max-width: 700px) {
+            .tracks-grid { grid-template-columns: 1fr; }
+            .v-step-label { font-size: 0.9rem; max-width: 120px; }
+}
+</style>
+</head>
+<body>
+    <div class="tech-bg">
+        <svg width="100%" height="100%" viewBox="0 0 1920 1080" fill="none" xmlns="http://www.w3.org/2000/svg" style="position:absolute;top:0;left:0;">
+            <defs>
+                <linearGradient id="circuitLine" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0%" stop-color="#00e5c0" stop-opacity="0.18"/>
+                    <stop offset="100%" stop-color="#FFD600" stop-opacity="0.13"/>
+                </linearGradient>
+            </defs>
+            <!-- خطوط تقنية بزوايا حادة -->
+            <polyline points="100,100 300,100 320,180 600,180" stroke="url(#circuitLine)" stroke-width="2" fill="none"/>
+            <polyline points="100,300 250,300 270,380 600,380" stroke="url(#circuitLine)" stroke-width="2" fill="none"/>
+            <polyline points="100,500 350,500 370,580 600,580" stroke="url(#circuitLine)" stroke-width="2" fill="none"/>
+            <polyline points="1820,200 1620,200 1600,280 1300,280" stroke="url(#circuitLine)" stroke-width="2" fill="none"/>
+            <polyline points="1820,400 1670,400 1650,480 1300,480" stroke="url(#circuitLine)" stroke-width="2" fill="none"/>
+            <polyline points="1820,600 1550,600 1530,680 1300,680" stroke="url(#circuitLine)" stroke-width="2" fill="none"/>
+            <!-- مربعات شفافة حول مناطق كود -->
+            <rect x="650" y="120" width="260" height="80" rx="12" stroke="#00e5c0" stroke-width="1.5" fill="none" opacity="0.10"/>
+            <rect x="650" y="320" width="260" height="80" rx="12" stroke="#FFD600" stroke-width="1.5" fill="none" opacity="0.10"/>
+            <rect x="650" y="520" width="260" height="80" rx="12" stroke="#00e5c0" stroke-width="1.5" fill="none" opacity="0.10"/>
+            <rect x="1010" y="220" width="260" height="80" rx="12" stroke="#FFD600" stroke-width="1.5" fill="none" opacity="0.10"/>
+            <rect x="1010" y="420" width="260" height="80" rx="12" stroke="#00e5c0" stroke-width="1.5" fill="none" opacity="0.10"/>
+            <rect x="1010" y="620" width="260" height="80" rx="12" stroke="#FFD600" stroke-width="1.5" fill="none" opacity="0.10"/>
+            <!-- خطوط رأسية إضافية -->
+            <line x1="960" y1="0" x2="960" y2="1080" stroke="#00e5c0" stroke-width="1" opacity="0.07"/>
+            <line x1="480" y1="0" x2="480" y2="1080" stroke="#FFD600" stroke-width="1" opacity="0.05"/>
+            <line x1="1440" y1="0" x2="1440" y2="1080" stroke="#FFD600" stroke-width="1" opacity="0.05"/>
+            <!-- دوائر تقنية شفافة -->
+            <circle cx="400" cy="200" r="80" stroke="#00e5c0" stroke-width="2" fill="none" opacity="0.08"/>
+            <circle cx="1500" cy="800" r="120" stroke="#FFD600" stroke-width="2" fill="none" opacity="0.09"/>
+            <circle cx="1000" cy="500" r="60" stroke="#00e5c0" stroke-width="1.5" fill="none" opacity="0.07"/>
+        </svg>
+    </div>
+    <header>
+            <a href="home.html" class="site-name">CODIFY</a>
+    </header>
+        <div class="container">
+        <h1>Quizzes</h1>
+        <div id="tracksContainer">
+            <div class="loading">Loading quizzes...</div>
+        </div>
+    </div>
+    <!-- Modal for quiz -->
+    <div id="quizModal" class="modal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal()">&times;</button>
+            <h2 id="modalQuizTitle"></h2>
+            <form id="quizForm">
+                <div class="question" id="modalQuestion">
+                    <!-- سيتم ملء الأسئلة هنا -->
+                </div>
+                <button type="submit">Submit</button>
+            </form>
+            <div class="result-message" id="quizResultMsg"></div>
+        </div>
+    </div>
+    <script>
+        // جميع التراكات والكورسات بنفس ترتيب الرودمابس
+        const allTracks = [
+            {
+                track: 'Front-End',
+                courses: [
+                    'HTML',
+                    'CSS',
+                    'JavaScript'
+                ]
+            },
+            {
+                track: 'Back-End',
+                courses: [
+                    'Python',
+                    'Java',
+                    'PHP',
+                    'Node.js'
+                ]
+            },
+            {
+                track: 'Cyber Security',
+                courses: [
+                    'Introduction to Cyber Security',
+                    'Cyber Security Essentials',
+                    'CompTIA Security+',
+                    'Penetration Testing & Ethical Hacking',
+                    'Network Security'
+                ]
+            },
+            {
+                track: 'Data Science',
+                courses: [
+                    'Python',
+                    'Git',
+                    'Data Structures',
+                    'SQL',
+                    'Mathematics & Statistics',
+                    'Data Collection',
+                    'Machine Learning',
+                    'Deep Learning',
+                    'Specialization',
+                    'Big Data'
+                ]
+            },
+            {
+                track: 'Mobile App',
+                courses: [
+                    'HTML & CSS',
+                    'JavaScript',
+                    'TypeScript',
+                    'Design Patterns',
+                    'React',
+                    'React Native',
+                    'Dart',
+                    'Flutter'
+                ]
+            },
+            {
+                track: 'DevOps',
+                courses: [
+                    'Linux',
+                    'Networking',
+                    'Python',
+                    'Git',
+                    'Docker',
+                    'Jenkins',
+                    'AWS',
+                    'Kubernetes',
+                    'Nginx',
+                    'Ansible',
+                    'Terraform'
+                ]
+            }
+        ];
+
+        // مثال: توليد أسئلة تلقائية (يمكنك لاحقًا تخصيصها)
+        function generateQuestions(course) {
+            // أسئلة متنوعة من السهل للمتقدم
+            return [
+                {q: `What is ${course}?`, options: ['A language', 'A tool', 'A concept'], answer: 0},
+                {q: `Which is true about ${course}?`, options: ['Option 1', 'Option 2', 'Option 3'], answer: 1},
+                {q: `Choose the correct syntax for ${course}.`, options: ['Syntax 1', 'Syntax 2', 'Syntax 3'], answer: 2},
+                {q: `What is the output of ... in ${course}?`, options: ['Output 1', 'Output 2', 'Output 3'], answer: 0},
+                {q: `Which is NOT a feature of ${course}?`, options: ['Feature 1', 'Feature 2', 'Feature 3'], answer: 1},
+                {q: `How do you declare a variable in ${course}?`, options: ['Way 1', 'Way 2', 'Way 3'], answer: 2},
+                {q: `What does this code do in ${course}?`, options: ['Does X', 'Does Y', 'Does Z'], answer: 0},
+                {q: `Which of the following is best practice in ${course}?`, options: ['Practice 1', 'Practice 2', 'Practice 3'], answer: 1},
+                {q: `What is the result of ... in ${course}?`, options: ['Result 1', 'Result 2', 'Result 3'], answer: 2},
+                {q: `Advanced: Explain a complex concept in ${course}.`, options: ['Explanation 1', 'Explanation 2', 'Explanation 3'], answer: 0}
+            ];
+        }
+
+        // بناء هيكل الكويزات
+        let tracks = allTracks.map(trackObj => ({
+            track: trackObj.track,
+            quizzes: trackObj.courses.map((course, idx) => ({
+                id: `${trackObj.track}-${idx}`,
+                title: course,
+                status: idx === 0 ? 'unlocked' : 'locked',
+                questions: generateQuestions(course)
+            }))
+        }));
+        let currentQuiz = null;
+        let currentQuestions = [];
+        let currentQuizIndex = 0;
+        let currentTrackIndex = 0;
+
+        function renderTracks() {
+            const container = document.getElementById('tracksContainer');
+            container.innerHTML = '';
+            // قسم التراكات إلى صفوف كل صف فيه 3 تراكات
+            const tracksPerRow = 3;
+            for (let i = 0; i < tracks.length; i += tracksPerRow) {
+                const row = document.createElement('div');
+                row.className = 'tracks-grid';
+                const rowTracks = tracks.slice(i, i + tracksPerRow);
+                rowTracks.forEach((track, tIdx) => {
+                    const col = document.createElement('div');
+                    col.className = 'track-col';
+                    col.innerHTML = `<div class=\"track-title\">${track.track}</div>`;
+                    // Stepper عمودي لهذا التراك
+                    let unlockedFound = false;
+                    const stepper = document.createElement('div');
+                    stepper.className = 'vertical-stepper';
+                    stepper.innerHTML = track.quizzes.map((q, idx) => {
+                        let status = q.status;
+                        if (!unlockedFound && (status === 'unlocked' || status === 'failed')) {
+                            unlockedFound = true;
+                        } else if (!unlockedFound) {
+                            status = 'locked';
+                        }
+                        // الدائرة تفتح الكويز إذا كانت متاحة
+                        const openHandler = (status === 'unlocked' || status === 'failed') ? `onclick=\"openQuiz(${i + tIdx},${idx})\"` : '';
+                        return `
+                            <div class=\"v-step\">
+                                <div class=\"v-circle ${status}\" ${openHandler}>${idx + 1}</div>
+                                <div class=\"v-step-label\">${q.title}</div>
+            </div>
+                        `;
+                    }).join('');
+                    col.appendChild(stepper);
+                    row.appendChild(col);
+                });
+                container.appendChild(row);
+            }
+        }
+
+        function openQuiz(trackIdx, quizIdx) {
+            currentTrackIndex = trackIdx;
+            currentQuizIndex = quizIdx;
+            currentQuiz = tracks[trackIdx].quizzes[quizIdx];
+            currentQuestions = currentQuiz.questions;
+            renderQuizQuestion(0);
+            document.getElementById('quizResultMsg').textContent = '';
+            document.getElementById('quizModal').classList.add('active');
+        }
+
+        let currentQuestionIdx = 0;
+        function renderQuizQuestion(qIdx) {
+            currentQuestionIdx = qIdx;
+            const q = currentQuestions[qIdx];
+            let html = `<label style="font-weight:600;">${q.q}</label>`;
+            q.options.forEach((opt, i) => {
+                html += `<label><input type="radio" name="q${qIdx}" value="${i}"> ${opt}</label>`;
+            });
+            document.getElementById('modalQuestion').innerHTML = html;
+            document.getElementById('quizForm').onsubmit = handleQuizSubmit;
+        }
+
+        function handleQuizSubmit(e) {
+            e.preventDefault();
+            const answer = document.querySelector(`input[name="q${currentQuestionIdx}"]:checked`);
+            if (!answer) {
+                document.getElementById('quizResultMsg').textContent = 'Please select an answer.';
+                return;
+            }
+            const isCorrect = parseInt(answer.value) === currentQuestions[currentQuestionIdx].answer;
+            if (isCorrect) {
+                if (currentQuestionIdx < currentQuestions.length - 1) {
+                    renderQuizQuestion(currentQuestionIdx + 1);
+                } else {
+                    document.getElementById('quizResultMsg').textContent = 'All answers correct! Quiz passed.';
+                    // تحديث حالة الكويز
+                    tracks[currentTrackIndex].quizzes[currentQuizIndex].status = 'passed';
+                    // فتح الكويز التالي إذا وجد
+                    if (tracks[currentTrackIndex].quizzes[currentQuizIndex + 1]) {
+                        tracks[currentTrackIndex].quizzes[currentQuizIndex + 1].status = 'unlocked';
+                    }
+                    setTimeout(() => {
+                        document.getElementById('quizModal').classList.remove('active');
+                        renderTracks();
+                    }, 1200);
+                }
+            } else {
+                document.getElementById('quizResultMsg').textContent = 'Wrong answer. Try again!';
+                // تحديث حالة الكويز
+                tracks[currentTrackIndex].quizzes[currentQuizIndex].status = 'failed';
+                renderTracks();
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('quizModal').classList.remove('active');
+        }
+
+        document.addEventListener('DOMContentLoaded', renderTracks);
+    </script>
+</body>
+</html>

@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Login & Signup</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #0a192f 0%, #1a365d 100%);
+      min-height: 100vh;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .form-container {
+      background: linear-gradient(120deg, rgba(10,25,47,0.98) 60%, rgba(0,229,192,0.08) 100%);
+      padding: 35px 30px 30px 30px;
+      border-radius: 18px;
+      width: 370px;
+      text-align: center;
+      box-shadow: 0 8px 32px 0 rgba(0,229,192,0.10), 0 1.5px 8px 0 rgba(0,0,0,0.10);
+      backdrop-filter: blur(6px);
+      border: 1.5px solid rgba(0,229,192,0.13);
+      position: relative;
+      z-index: 1;
+    }
+    h2 {
+      color: #00e5c0;
+      font-size: 1.8rem;
+      margin-bottom: 1.5rem;
+    }
+    .form-container .input-wrapper {
+      width: 90%;
+      margin: 0 auto 1.25rem auto;
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+    .form-container .input-wrapper input[type="email"],
+    .form-container .input-wrapper input[type="password"],
+    .form-container .input-wrapper input[type="text"] {
+      width: 100%;
+      padding: 0.5rem 0.9rem;
+      height: 38px;
+      border: none;
+      border-radius: 0.75rem;
+      background: rgba(255, 255, 255, 0.93);
+      font-size: 1rem;
+      outline: none;
+      box-shadow: 0 1.5px 6px 0 rgba(0,229,192,0.07);
+      transition: box-shadow 0.3s, background 0.3s;
+      margin-bottom: 0;
+      display: block;
+    }
+    .form-container input:focus {
+      box-shadow: 0 0 0 2px #00e5c0;
+      background: #f6fffd;
+    }
+    .form-container button {
+      width: 100%;
+      padding: 0.75rem;
+      background: linear-gradient(90deg, #00e5c0 60%, #00a3e0 100%);
+      color: #0a192f;
+      border: none;
+      border-radius: 0.75rem;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 2px 8px 0 rgba(0,229,192,0.10);
+      transition: background 0.3s, color 0.3s;
+    }
+    .form-container button:hover:not(:disabled) {
+      background: linear-gradient(90deg, #26a7a7 60%, #00e5c0 100%);
+      color: #fff;
+    }
+    .form-container button:disabled {
+      background-color: #777;
+      cursor: not-allowed;
+    }
+    .switch-link {
+      display: inline-block;
+      margin-top: 1rem;
+      color: #00e5c0;
+      text-decoration: none;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: opacity 0.3s;
+    }
+    .switch-link:hover {
+      opacity: 0.8;
+    }
+    .message {
+      font-size: 0.9rem;
+      min-height: 1.2rem;
+      margin-bottom: 1rem;
+      color: #ff6b6b;
+    }
+    .success-message {
+      color: #4CAF50;
+    }
+    /* إخفاء النموذجين بشكل افتراضي، نستخدم JS للتحكم */
+    .login-form,
+    .signup-form {
+      display: none;
+    }
+    .login-form.active,
+    .signup-form.active {
+      display: block;
+    }
+    /* خلفية ديكورية برمجية */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      z-index: 0;
+      pointer-events: none;
+      background: url('data:image/svg+xml;utf8,<svg width="100%25" height="100%25" xmlns="http://www.w3.org/2000/svg"><text x="10" y="60" font-size="48" fill="%2300e5c055" font-family="monospace">{ code }</text><text x="60%25" y="90%25" font-size="38" fill="%2300e5c022" font-family="monospace">&lt;script&gt;</text><text x="30%25" y="30%25" font-size="32" fill="%2300e5c033" font-family="monospace">function()</text><text x="80%" y="20%" font-size="30" fill="%2300e5c044" font-family="monospace">console.log('Hello')</text><text x="15%" y="80%" font-size="36" fill="%2300e5c022" font-family="monospace">&lt;div class='app'&gt;</text><text x="70%" y="50%" font-size="28" fill="%2300e5c033" font-family="monospace">if (user) {'...'}</text><text x="40%" y="15%" font-size="24" fill="%2300e5c022" font-family="monospace">[ ...props ]</text><text x="10%" y="50%" font-size="28" fill="%2300e5c044" font-family="monospace">&lt;!-- HTML --&gt;</text><text x="50%" y="10%" font-size="32" fill="%2300e5c055" font-family="monospace">let x = 42;</text><text x="20%" y="70%" font-size="28" fill="%2300e5c033" font-family="monospace">// TODO: Refactor</text><text x="80%" y="80%" font-size="30" fill="%2300e5c022" font-family="monospace">export default App;</text></svg>') no-repeat center center;
+      opacity: 0.18;
+    }
+    /* تصغير عرض حقل الباسوورد وتوسيطه */
+    .form-container .password-wrapper {
+      width: 90%;
+      margin: 0 auto 1.25rem auto;
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+    .form-container .toggle-password {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: #00e5c0;
+      font-size: 1.5rem;
+      z-index: 2;
+    }
+    /* زر العودة */
+    .back-btn {
+      position: absolute;
+      top: 18px;
+      left: 18px;
+      z-index: 3;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: none;
+      border: none;
+      color: #00e5c0;
+      font-size: 1.08rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: color 0.2s;
+      opacity: 0.85;
+    }
+    .back-btn:hover {
+      color: #00a3e0;
+      opacity: 1;
+    }
+    /* الروبوت المتحرك */
+    .robot-container {
+      position: fixed;
+      left: 38px;
+      top: 120px;
+      width: 140px;  /* حجم أكبر للروبوت في صفحة تسجيل الدخول */
+      height: 180px;
+      z-index: 999;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    /* الأذرع */
+    .robot-arm {
+      position: absolute;
+      width: 18px;
+      height: 60px;
+      background: linear-gradient(135deg, #2C3E50, #3498db);
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 229, 192, 0.3);
+    }
+
+    .robot-arm.left {
+      left: -20px;
+      top: 30%;
+      transform-origin: top center;
+      animation: swingLeft 3s ease-in-out infinite;
+    }
+
+    .robot-arm.right {
+      right: -20px;
+      top: 30%;
+      transform-origin: top center;
+      animation: swingRight 3s ease-in-out infinite;
+    }
+
+    @keyframes swingLeft {
+      0%, 100% { transform: rotate(-5deg); }
+      50% { transform: rotate(15deg); }
+    }
+
+    @keyframes swingRight {
+      0%, 100% { transform: rotate(5deg); }
+      50% { transform: rotate(-15deg); }
+    }
+
+    /* الأرجل */
+    .robot-leg {
+      position: absolute;
+      width: 22px;
+      height: 50px;
+      background: linear-gradient(135deg, #2C3E50, #3498db);
+      border-radius: 8px;
+      bottom: -45px;
+      box-shadow: 0 0 10px rgba(0, 229, 192, 0.3);
+    }
+
+    .robot-leg.left {
+      left: 25%;
+      animation: walkLeft 3s ease-in-out infinite;
+    }
+
+    .robot-leg.right {
+      right: 25%;
+      animation: walkRight 3s ease-in-out infinite;
+    }
+
+    @keyframes walkLeft {
+      0%, 100% { transform: rotate(-5deg); }
+      50% { transform: rotate(5deg); }
+    }
+
+    @keyframes walkRight {
+      0%, 100% { transform: rotate(5deg); }
+      50% { transform: rotate(-5deg); }
+    }
+
+    .robot {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: all 0.3s ease;
+    }
+
+    .robot-body {
+      width: 100%;
+      height: 75%;
+      position: absolute;
+      background: linear-gradient(135deg, #2C3E50, #3498db);
+      border-radius: 20px;
+      box-shadow: 
+        0 5px 15px rgba(0, 229, 192, 0.4),
+        0 0 30px rgba(0, 229, 192, 0.2),
+        inset 0 0 15px rgba(52, 152, 219, 0.5);
+      overflow: hidden;
+    }
+
+    .robot-face {
+      position: absolute;
+      width: 80%;
+      height: 60%;
+      top: 20%;
+      left: 10%;
+      background: rgba(0, 229, 192, 0.1);
+      border-radius: 15px;
+      backdrop-filter: blur(5px);
+    }
+
+    .robot-eye {
+      position: absolute;
+      width: 25px;
+      height: 25px;
+      background: #FFD600;
+      border-radius: 50%;
+      box-shadow: 0 0 20px #FFD600;
+      animation: glow 2s infinite;
+    }
+
+    .robot-eye.left {
+      top: 40%;
+      left: 25%;
+    }
+
+    .robot-eye.right {
+      top: 40%;
+      right: 25%;
+    }
+
+    .robot-antenna {
+      position: absolute;
+      width: 8px;
+      height: 25px;
+      background: #00e5c0;
+      top: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-radius: 4px;
+      box-shadow: 0 0 15px #00e5c0;
+    }
+
+    @keyframes glow {
+      0%, 100% { box-shadow: 0 0 20px #FFD600; }
+      50% { box-shadow: 0 0 30px #FFD600, 0 0 40px #FFD600; }
+    }
+
+    /* تأثيرات الحركة */
+    .robot-container:hover {
+      transform: translateY(-5px) scale(1.05);
+    }
+
+    .robot-container:hover .robot-arm.left { animation: swingLeft 1.5s ease-in-out infinite; }
+    .robot-container:hover .robot-arm.right { animation: swingRight 1.5s ease-in-out infinite; }
+    .robot-container:hover .robot-leg.left { animation: walkLeft 1.5s ease-in-out infinite; }
+    .robot-container:hover .robot-leg.right { animation: walkRight 1.5s ease-in-out infinite; }
+
+    /* تحديث حركة القفز */
+    @keyframes jump {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-20px); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="form-container">
+    <!-- نموذج تسجيل الدخول -->
+    <div class="login-form active">
+      <h2>Login</h2>
+      <div class="message" id="loginMessage"></div>
+      <form id="loginForm">
+        <div class="input-wrapper">
+          <input type="email" id="loginEmail" placeholder="Email" required>
+        </div>
+        <div class="input-wrapper password-wrapper">
+          <input type="password" id="loginPassword" placeholder="Password" required style="padding-right: 40px;">
+          <span class="toggle-password" onclick="togglePassword('loginPassword', this)">
+            <svg id="loginPasswordEye" xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24"><path stroke="#00e5c0" stroke-width="1.5" d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12Z"/><circle cx="12" cy="12" r="3" stroke="#00e5c0" stroke-width="1.5"/></svg>
+          </span>
+        </div>
+        <button type="submit">Login</button>
+      </form>
+      <p>Don't have an account? <span class="switch-link" id="toSignup">Sign up</span></p>
+    </div>
+
+    <!-- نموذج التسجيل -->
+    <div class="signup-form">
+      <h2>Create Account</h2>
+      <div class="message" id="signupMessage"></div>
+      <form id="registerForm">
+        <div class="input-wrapper">
+          <input type="text" id="name" placeholder="Full Name" required>
+        </div>
+        <div class="input-wrapper">
+          <input type="email" id="signupEmail" placeholder="Email" required>
+        </div>
+        <div class="input-wrapper password-wrapper">
+          <input type="password" id="signupPassword" placeholder="Password" required minlength="8" style="padding-right: 40px;">
+          <span class="toggle-password" onclick="togglePassword('signupPassword', this)">
+            <svg id="signupPasswordEye" xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24"><path stroke="#00e5c0" stroke-width="1.5" d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12Z"/><circle cx="12" cy="12" r="3" stroke="#00e5c0" stroke-width="1.5"/></svg>
+          </span>
+        </div>
+        <button type="submit">Sign Up</button>
+      </form>
+      <p>Already have an account? <span class="switch-link" id="toLogin">Login</span></p>
+    </div>
+  </div>
+
+  <!-- عناصر ديكورية حول الصندوق -->
+  <div style="position: absolute; left: -30px; top: -30px; z-index: 2;">
+    <svg width="60" height="60"><text x="0" y="40" font-size="32" fill="#00e5c0" opacity="0.13" font-family="monospace">{ }</text></svg>
+  </div>
+  <div style="position: absolute; right: -25px; bottom: -25px; z-index: 2;">
+    <svg width="50" height="50"><text x="0" y="35" font-size="28" fill="#00e5c0" opacity="0.10" font-family="monospace">&lt;/&gt;</text></svg>
+  </div>
+
+  <!-- زر العودة لأعلى الصندوق -->
+  <button class="back-btn" onclick="window.history.back()" title="Back">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15 18L9 12L15 6" stroke="#00e5c0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Back
+  </button>
+
+  <div class="robot-container">
+    <div class="robot">
+      <div class="robot-antenna"></div>
+      <div class="robot-arm left"></div>
+      <div class="robot-arm right"></div>
+      <div class="robot-body">
+        <div class="robot-face">
+          <div class="robot-eye left"></div>
+          <div class="robot-eye right"></div>
+        </div>
+      </div>
+      <div class="robot-leg left"></div>
+      <div class="robot-leg right"></div>
+    </div>
+  </div>
+
+  <script>
+    const API_URL = 'http://127.0.0.1:5051';
+    const loginFormEl = document.querySelector('.login-form');
+    const signupFormEl = document.querySelector('.signup-form');
+    const loginMessageEl = document.getElementById('loginMessage');
+    const signupMessageEl = document.getElementById('signupMessage');
+
+    // دالة للتحقق من اتصال الخادم
+    async function checkServer() {
+        try {
+            loginMessageEl.textContent = "Checking server connection...";
+            loginMessageEl.className = "message";
+            
+            // محاولة الاتصال بالخادم
+            const res = await fetch(`${API_URL}/test`);
+            const data = await res.json();
+            
+            if (data.status === 'ok') {
+                console.log('Server connected on port:', data.port);
+                API_URL = `http://localhost:5051`;
+                loginMessageEl.textContent = "";
+                return true;
+            }
+        } catch (error) {
+            console.error('Server connection error:', error);
+            loginMessageEl.textContent = "Cannot connect to server. Please try again later.";
+            loginMessageEl.className = "message";
+            return false;
+        }
+    }
+
+    // التبديل بين نماذج تسجيل الدخول والتسجيل
+    document.getElementById('toSignup').onclick = () => {
+        loginFormEl.classList.remove('active');
+        signupFormEl.classList.add('active');
+        loginMessageEl.textContent = '';
+        signupMessageEl.textContent = '';
+    };
+    
+    document.getElementById('toLogin').onclick = () => {
+        signupFormEl.classList.remove('active');
+        loginFormEl.classList.add('active');
+        loginMessageEl.textContent = '';
+        signupMessageEl.textContent = '';
+    };
+
+    // التسجيل
+    document.getElementById("registerForm").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const messageEl = document.querySelector('.message');
+        const button = e.target.querySelector('button');
+        button.disabled = true;
+
+        try {
+            const formData = {
+                name: document.getElementById("name").value,
+                email: document.getElementById("signupEmail").value,
+                password: document.getElementById("signupPassword").value
+            };
+
+            const response = await fetch(`${API_URL}/register`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                credentials: 'omit',  // مهم: تجاهل الكوكيز
+                body: JSON.stringify(formData)
+            });
+
+            const data = await response.json();
+            
+            if (response.ok) {
+                messageEl.textContent = "تم التسجيل بنجاح!";
+                messageEl.style.color = "#00e5c0";
+                setTimeout(() => {
+                    window.location.href = `verify.html?email=${encodeURIComponent(data.email)}`;
+                }, 1500);
+            } else {
+                messageEl.textContent = data.error || "حدث خطأ في التسجيل";
+                messageEl.style.color = "#ff6b6b";
+            }
+        } catch (error) {
+            console.error('Registration error:', error);
+            messageEl.textContent = "حدث خطأ في الاتصال بالخادم";
+            messageEl.style.color = "#ff6b6b";
+        } finally {
+            button.disabled = false;
+        }
+    });
+
+    // تسجيل الدخول
+    document.getElementById("loginForm").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const button = e.target.querySelector('button');
+        const messageEl = document.getElementById('loginMessage');
+        
+        button.disabled = true;
+        messageEl.textContent = "Logging in...";
+        messageEl.className = "message";
+
+        try {
+            const res = await fetch(`${API_URL}/login`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    email: document.getElementById("loginEmail").value,
+                    password: document.getElementById("loginPassword").value
+                })
+            });
+
+            const data = await res.json();
+            
+            if (res.ok) {
+                // تخزين التوكن مع إضافة Bearer
+                localStorage.setItem("token", `Bearer ${data.token}`);
+                localStorage.setItem("userName", data.user.name);
+                localStorage.setItem("userEmail", data.user.email);
+                
+                messageEl.textContent = "Login successful! Redirecting...";
+                messageEl.className = "message success-message";
+                
+                // التأكد من أن التوكن تم تخزينه قبل التوجيه
+                setTimeout(() => {
+                    const token = localStorage.getItem("token");
+                    if (token) {
+                        window.location.href = "profile.html";
+                    } else {
+                        messageEl.textContent = "Error saving login data. Please try again.";
+                        messageEl.className = "message";
+                    }
+                }, 1000);
+            } else {
+                if (data.requires_verification) {
+                    messageEl.textContent = "Please verify your email first";
+                    setTimeout(() => {
+                        window.location.href = `verify.html?email=${encodeURIComponent(document.getElementById("loginEmail").value)}`;
+                    }, 2000);
+                } else {
+                    messageEl.textContent = data.error || "Invalid email or password";
+                }
+                messageEl.className = "message";
+            }
+        } catch (error) {
+            console.error('Login error:', error);
+            messageEl.textContent = "Connection error. Please try again.";
+            messageEl.className = "message";
+        } finally {
+            button.disabled = false;
+        }
+    });
+
+    // التحقق من وجود توكن عند تحميل الصفحة
+    window.onload = () => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            window.location.href = 'profile.html';
+        }
+    };
+
+    // دالة إظهار/إخفاء الباسوورد
+    function togglePassword(inputId, icon) {
+      const input = document.getElementById(inputId);
+      const svg = icon.querySelector('svg');
+      if (input.type === 'password') {
+        input.type = 'text';
+        // عين مغلقة (eye-slash)
+        svg.innerHTML = '<path stroke="#00e5c0" stroke-width="1.5" d="M1 12s4-7 11-7c2.5 0 4.5.7 6.1 1.7M23 12s-4 7-11 7c-2.5 0-4.5-.7-6.1-1.7"/><circle cx="12" cy="12" r="3" stroke="#00e5c0" stroke-width="1.5"/><line x1="4" y1="4" x2="20" y2="20" stroke="#00e5c0" stroke-width="1.5"/>';
+      } else {
+        input.type = 'password';
+        // عين مفتوحة
+        svg.innerHTML = '<path stroke="#00e5c0" stroke-width="1.5" d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12Z"/><circle cx="12" cy="12" r="3" stroke="#00e5c0" stroke-width="1.5"/>';
+      }
+    }
+
+    // تفاعلات الروبوت مع الماوس
+    const robotContainer = document.querySelector('.robot-container');
+    const robot = document.querySelector('.robot');
+
+    // تحريك الروبوت مع حركة الماوس
+    document.addEventListener('mousemove', (e) => {
+      const mouseX = e.clientX / window.innerWidth - 0.5;
+      const mouseY = e.clientY / window.innerHeight - 0.5;
+      
+      if (Math.abs(e.clientX - robotContainer.getBoundingClientRect().left) < 200 &&
+        Math.abs(e.clientY - robotContainer.getBoundingClientRect().top) < 200) {
+        robot.style.transform = `
+          rotateY(${mouseX * 30}deg)
+          rotateX(${-mouseY * 30}deg)
+        `;
+      }
+    });
+
+    // تفاعل الروبوت مع السكرول
+    window.addEventListener('scroll', () => {
+      const scrollPercent = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight));
+      
+      robot.style.transform = `
+        rotateY(${Math.sin(scrollPercent * Math.PI * 2) * 20}deg)
+        rotateX(${Math.cos(scrollPercent * Math.PI * 2) * 20}deg)
+        translateY(${Math.sin(scrollPercent * Math.PI) * 10}px)
+      `;
+    });
+
+    // تفاعل عند النقر على الروبوت
+    robotContainer.addEventListener('click', () => {
+      robot.style.animation = 'none';
+      robot.offsetHeight; // trigger reflow
+      robot.style.animation = 'jump 0.5s ease';
+    });
+  </script>
+
+</body>
+</html>

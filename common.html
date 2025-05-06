@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Codify - Common Courses</title>
+    <style>
+        body {
+            font-family: 'Cairo', 'Segoe UI', Arial, sans-serif;
+            color: #f6f8fa;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #181c2b 0%, #232b47 60%, #1a2a3a 100%);
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .tech-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.22;
+        }
+
+        .fade-out {
+            opacity: 0;
+            transform: scale(0.9);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        header {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            background: rgba(24, 28, 43, 0.95);
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        nav {
+            background: rgba(20, 32, 54, 0.92);
+            padding: 10px 22px;
+            border-radius: 18px;
+            box-shadow: 0 4px 24px #00e5c033;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 1200;
+            transition: background 0.2s;
+            margin-left: auto;
+            margin-right: 50px;
+        }
+
+        nav a {
+            color: #CCD6F6;
+            text-decoration: none;
+            margin: 0 10px;
+            font-size: 1.13rem;
+            font-weight: 500;
+            padding: 7px 16px;
+            border-radius: 12px;
+            transition: background 0.18s, color 0.18s;
+            position: relative;
+        }
+
+        nav a.active, nav a:hover {
+            background: linear-gradient(90deg, #00e5c0 60%, #FFD600 100%);
+            color: #233554;
+            box-shadow: 0 2px 8px #00e5c055;
+        }
+
+        .site-name {
+            font-size: 2.3rem;
+            color: #00e5c0;
+            font-weight: bold;
+            text-decoration: none;
+            letter-spacing: 2.5px;
+            text-shadow: 0 2px 16px #00e5c055;
+            transition: color 0.2s;
+        }
+        
+        .site-name:hover {
+            color: #FFD600;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        h1 {
+            font-size: 3rem;
+            color: #00e5c0;
+            text-align: center;
+            margin-bottom: 40px;
+            text-shadow: 0 2px 16px #00e5c055;
+        }
+
+        .common-section {
+            background: rgba(36, 48, 78, 0.93);
+            border-radius: 22px;
+            padding: 32px;
+            margin-bottom: 40px;
+            box-shadow: 0 6px 32px #00e5c022, 0 1.5px 0 #FFD60011 inset;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .common-section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px #00e5c044, 0 1.5px 0 #FFD60022 inset;
+        }
+
+        .circle-container {
+            position: relative;
+            width: 350px;
+            height: 180px;
+            margin: 0 auto;
+        }
+
+        .circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            position: absolute;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+            text-align: center;
+            opacity: 0.9;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .circle:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+        }
+
+        .circle1 {
+            background: linear-gradient(135deg, #00e5c0 0%, #00e5c0aa 100%);
+            left: 20px;
+            top: 15px;
+            box-shadow: 0 4px 20px #00e5c044;
+        }
+
+        .circle2 {
+            background: linear-gradient(135deg, #FFD600 0%, #FFD600aa 100%);
+            right: 20px;
+            top: 15px;
+            box-shadow: 0 4px 20px #FFD60044;
+        }
+
+        .shared {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(8px);
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: #FFD600;
+            box-shadow: 0 4px 24px rgba(0,229,192,0.2);
+            border: 2px solid rgba(255,214,0,0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .shared:hover {
+            transform: translate(-50%, -50%) scale(1.1);
+            box-shadow: 0 8px 32px rgba(0,229,192,0.3);
+            border-color: rgba(255,214,0,0.4);
+        }
+
+        .description {
+            width: 80%;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin: 30px auto 0;
+            color: #CCD6F6;
+            text-align: center;
+            padding: 20px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+
+            .circle-container {
+                width: 300px;
+                height: 160px;
+            }
+
+            .circle {
+                width: 130px;
+                height: 130px;
+                font-size: 1rem;
+            }
+
+            .shared {
+                width: 100px;
+                height: 100px;
+                font-size: 0.9rem;
+            }
+
+            .description {
+                width: 90%;
+                font-size: 1rem;
+            }
+        }
+
+        /* الروبوت المتحرك */
+        .robot-container {
+            position: fixed;
+            left: 38px;
+            top: 100px;
+            width: 100px;
+            height: 140px;
+            z-index: 999;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        /* الأذرع */
+        .robot-arm {
+            position: absolute;
+            width: 12px;
+            height: 45px;
+            background: linear-gradient(135deg, #2C3E50, #3498db);
+            border-radius: 6px;
+            box-shadow: 0 0 10px rgba(0, 229, 192, 0.3);
+        }
+
+        .robot-arm.left {
+            left: -20px;
+            top: 30%;
+            transform-origin: top center;
+            animation: swingLeft 3s ease-in-out infinite;
+        }
+
+        .robot-arm.right {
+            right: -20px;
+            top: 30%;
+            transform-origin: top center;
+            animation: swingRight 3s ease-in-out infinite;
+        }
+
+        @keyframes swingLeft {
+            0%, 100% { transform: rotate(-5deg); }
+            50% { transform: rotate(15deg); }
+        }
+
+        @keyframes swingRight {
+            0%, 100% { transform: rotate(5deg); }
+            50% { transform: rotate(-15deg); }
+        }
+
+        /* الأرجل */
+        .robot-leg {
+            position: absolute;
+            width: 16px;
+            height: 35px;
+            background: linear-gradient(135deg, #2C3E50, #3498db);
+            border-radius: 6px;
+            bottom: -30px;
+            box-shadow: 0 0 10px rgba(0, 229, 192, 0.3);
+        }
+
+        .robot-leg.left {
+            left: 25%;
+            animation: walkLeft 3s ease-in-out infinite;
+        }
+
+        .robot-leg.right {
+            right: 25%;
+            animation: walkRight 3s ease-in-out infinite;
+        }
+
+        @keyframes walkLeft {
+            0%, 100% { transform: rotate(-5deg); }
+            50% { transform: rotate(5deg); }
+        }
+
+        @keyframes walkRight {
+            0%, 100% { transform: rotate(5deg); }
+            50% { transform: rotate(-5deg); }
+        }
+
+        .robot {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: all 0.3s ease;
+        }
+
+        .robot-body {
+            width: 100%;
+            height: 75%;
+            position: absolute;
+            background: linear-gradient(135deg, #2C3E50, #3498db);
+            border-radius: 20px;
+            box-shadow: 
+                0 5px 15px rgba(0, 229, 192, 0.4),
+                0 0 30px rgba(0, 229, 192, 0.2),
+                inset 0 0 15px rgba(52, 152, 219, 0.5);
+            overflow: hidden;
+        }
+
+        .robot-face {
+            position: absolute;
+            width: 80%;
+            height: 60%;
+            top: 20%;
+            left: 10%;
+            background: rgba(0, 229, 192, 0.1);
+            border-radius: 15px;
+            backdrop-filter: blur(5px);
+        }
+
+        .robot-eye {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background: #FFD600;
+            border-radius: 50%;
+            box-shadow: 0 0 20px #FFD600;
+            animation: glow 2s infinite;
+        }
+
+        .robot-eye.left {
+            top: 40%;
+            left: 25%;
+        }
+
+        .robot-eye.right {
+            top: 40%;
+            right: 25%;
+        }
+
+        .robot-antenna {
+            position: absolute;
+            width: 6px;
+            height: 16px;
+            background: #00e5c0;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 3px;
+            box-shadow: 0 0 15px #00e5c0;
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 20px #FFD600; }
+            50% { box-shadow: 0 0 30px #FFD600, 0 0 40px #FFD600; }
+        }
+
+        /* تأثيرات الحركة */
+        .robot-container:hover {
+            transform: translateY(-5px) scale(1.05);
+        }
+
+        .robot-container:hover .robot-arm.left { animation: swingLeft 1.5s ease-in-out infinite; }
+        .robot-container:hover .robot-arm.right { animation: swingRight 1.5s ease-in-out infinite; }
+        .robot-container:hover .robot-leg.left { animation: walkLeft 1.5s ease-in-out infinite; }
+        .robot-container:hover .robot-leg.right { animation: walkRight 1.5s ease-in-out infinite; }
+
+        /* تحديث حركة القفز */
+        @keyframes jump {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+    </style>
+</head>
+<body>
+    <div class="tech-bg">
+        <svg width="100%" height="100%" viewBox="0 0 1920 1080" fill="none" xmlns="http://www.w3.org/2000/svg" style="position:absolute;top:0;left:0;">
+            <defs>
+                <linearGradient id="circuitLine" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0%" stop-color="#00e5c0" stop-opacity="0.22"/>
+                    <stop offset="100%" stop-color="#FFD600" stop-opacity="0.16"/>
+                </linearGradient>
+            </defs>
+            <polyline points="120,180 400,180 420,260 800,260" stroke="url(#circuitLine)" stroke-width="3.2" fill="none"/>
+            <polyline points="120,400 350,400 370,480 800,480" stroke="url(#circuitLine)" stroke-width="3.2" fill="none"/>
+            <polyline points="120,650 500,650 520,730 800,730" stroke="url(#circuitLine)" stroke-width="3.2" fill="none"/>
+            <polyline points="1800,300 1500,300 1480,380 1100,380" stroke="url(#circuitLine)" stroke-width="3.2" fill="none"/>
+            <polyline points="1800,600 1570,600 1550,680 1100,680" stroke="url(#circuitLine)" stroke-width="3.2" fill="none"/>
+            <rect x="900" y="120" width="260" height="80" rx="18" stroke="#00e5c0" stroke-width="2.5" fill="none" opacity="0.13"/>
+            <rect x="1200" y="320" width="260" height="80" rx="18" stroke="#FFD600" stroke-width="2.5" fill="none" opacity="0.13"/>
+            <rect x="1200" y="520" width="260" height="80" rx="18" stroke="#00e5c0" stroke-width="2.5" fill="none" opacity="0.13"/>
+            <circle cx="600" cy="300" r="110" stroke="#00e5c0" stroke-width="3" fill="none" opacity="0.10"/>
+            <circle cx="1500" cy="800" r="150" stroke="#FFD600" stroke-width="3" fill="none" opacity="0.12"/>
+            <circle cx="1000" cy="500" r="90" stroke="#00e5c0" stroke-width="2.5" fill="none" opacity="0.09"/>
+        </svg>
+    </div>
+
+    <header>
+        <a href="home.html" class="site-name">CODIFY</a>
+        <nav>
+            <a href="home.html">HOME</a>
+            <a href="profile.html">PROFILE</a>
+            <a href="tracks.html">TRACKS</a>
+            <a href="roadmaps.html">ROADMAPS</a>
+        </nav>
+    </header>
+
+    <div class="container">
+        <h1>Common Courses</h1>
+        
+        <div class="common-section">
+            <div class="circle-container">
+                <div class="circle circle1">Front-End</div>
+                <div class="circle circle2">Back-End</div>
+                <div class="shared">JavaScript</div>
+            </div>
+            <p class="description">JavaScript is used for both front-end and back-end development. It creates interactive web pages on the front-end and enables server-side programming with Node.js on the back-end.</p>
+        </div>
+
+        <div class="common-section">
+            <div class="circle-container">
+                <div class="circle circle1">Cyber Security</div>
+                <div class="circle circle2">Data Science</div>
+                <div class="shared">Python</div>
+            </div>
+            <p class="description">Python is widely used in both Cyber Security and Data Science. In Cyber Security, it's used for scripting and building security tools. In Data Science, it's used for data analysis and machine learning.</p>
+        </div>
+
+        <div class="common-section">
+            <div class="circle-container">
+                <div class="circle circle1">DevOps</div>
+                <div class="circle circle2">Cyber Security</div>
+                <div class="shared">Linux</div>
+            </div>
+            <p class="description">Linux is essential for both Cyber Security and DevOps. In Cyber Security, it's used for security testing and managing tools. In DevOps, it's used to manage servers and automate tasks.</p>
+        </div>
+
+        <div class="common-section">
+            <div class="circle-container">
+                <div class="circle circle1">Front-End</div>
+                <div class="circle circle2">Mobile App</div>
+                <div class="shared">React</div>
+            </div>
+            <p class="description">React is used for building web interfaces (Front-End), while React Native allows you to build mobile apps for both iOS and Android using the same code.</p>
+        </div>
+    </div>
+
+    <div class="robot-container">
+        <div class="robot">
+            <div class="robot-antenna"></div>
+            <div class="robot-arm left"></div>
+            <div class="robot-arm right"></div>
+            <div class="robot-body">
+                <div class="robot-face">
+                    <div class="robot-eye left"></div>
+                    <div class="robot-eye right"></div>
+                </div>
+            </div>
+            <div class="robot-leg left"></div>
+            <div class="robot-leg right"></div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            document.body.classList.add("loaded");
+            document.querySelectorAll("a").forEach(link => {
+                link.addEventListener("click", function (e) {
+                    e.preventDefault();
+                    let targetUrl = this.href;
+                    document.body.classList.add("fade-out");
+                    setTimeout(() => {
+                        window.location.href = targetUrl;
+                    }, 500);
+                });
+            });
+        });
+
+        // إضافة دالة نطق الكلمة بصوت روبوتي
+        function speakRobotic(text) {
+            // إيقاف أي نطق سابق
+            window.speechSynthesis.cancel();
+
+            const utterance = new SpeechSynthesisUtterance("CODIFY");
+            utterance.rate = 0.6; // سرعة أبطأ للنطق
+            utterance.pitch = 0.2; // صوت منخفض جداً (روبوتي)
+            utterance.volume = 1;
+            
+            // اختيار صوت إنجليزي للنطق
+            window.speechSynthesis.onvoiceschanged = () => {
+                const voices = window.speechSynthesis.getVoices();
+                // محاولة العثور على صوت مناسب
+                const preferredVoice = voices.find(voice => 
+                    voice.name.includes('Daniel') || 
+                    voice.name.includes('Google') || 
+                    voice.name.includes('Microsoft') ||
+                    voice.lang.includes('en-US')
+                );
+                if (preferredVoice) {
+                    utterance.voice = preferredVoice;
+                }
+            };
+            
+            window.speechSynthesis.speak(utterance);
+        }
+
+        // تفاعلات الروبوت مع الماوس
+        const robotContainer = document.querySelector('.robot-container');
+        const robot = document.querySelector('.robot');
+
+        // تحريك الروبوت مع حركة الماوس
+        document.addEventListener('mousemove', (e) => {
+            const mouseX = e.clientX / window.innerWidth - 0.5;
+            const mouseY = e.clientY / window.innerHeight - 0.5;
+            
+            if (Math.abs(e.clientX - robotContainer.getBoundingClientRect().left) < 200 &&
+                Math.abs(e.clientY - robotContainer.getBoundingClientRect().top) < 200) {
+                robot.style.transform = `
+                    rotateY(${mouseX * 30}deg)
+                    rotateX(${-mouseY * 30}deg)
+                `;
+            }
+        });
+
+        // تفاعل الروبوت مع السكرول
+        window.addEventListener('scroll', () => {
+            const scrollPercent = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight));
+            
+            robot.style.transform = `
+                rotateY(${Math.sin(scrollPercent * Math.PI * 2) * 20}deg)
+                rotateX(${Math.cos(scrollPercent * Math.PI * 2) * 20}deg)
+                translateY(${Math.sin(scrollPercent * Math.PI) * 10}px)
+            `;
+        });
+
+        // تفاعل عند النقر على الروبوت
+        let isPlaying = false;
+        robotContainer.addEventListener('click', () => {
+            if (isPlaying) return; // منع التداخل بين الأصوات
+            
+            isPlaying = true;
+            robot.style.animation = 'none';
+            robot.offsetHeight; // trigger reflow
+            robot.style.animation = 'jump 0.5s ease';
+            
+            // نطق كلمة CODIFY بصوت روبوتي
+            speakRobotic("CODIFY");
+            
+            // إعادة تعيين المتغير بعد انتهاء الصوت
+            setTimeout(() => {
+                isPlaying = false;
+            }, 1500);
+        });
+    </script>
+</body>
+</html>

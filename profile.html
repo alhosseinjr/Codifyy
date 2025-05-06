@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - Codify</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #181c2b 0%, #232b47 60%, #1a2a3a 100%);
+            min-height: 100vh;
+            color: #f6f8fa;
+            padding: 0;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .tech-bg-profile {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.22;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 290px 1fr;
+            gap: 36px;
+            min-height: calc(100vh - 40px);
+            padding-top: 60px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .sidebar {
+            background: rgba(36, 48, 78, 0.93);
+            padding: 32px 18px 28px 18px;
+            border-radius: 22px;
+            box-shadow: 0 6px 32px #00e5c022, 0 1.5px 0 #FFD60011 inset;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            height: fit-content;
+            position: sticky;
+            top: 40px;
+        }
+
+        .user-info {
+            text-align: center;
+            padding-bottom: 18px;
+            border-bottom: 1.5px solid rgba(0,229,192,0.10);
+            margin-bottom: 18px;
+        }
+
+        .user-avatar {
+            width: 110px;
+            height: 110px;
+            border-radius: 55px;
+            background: linear-gradient(45deg, #00e5c0, #FFD600);
+            margin: 0 auto 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: #181c2b;
+            font-weight: bold;
+            text-transform: uppercase;
+            box-shadow: 0 2px 12px #00e5c055;
+        }
+
+        .user-name {
+            font-size: 1.35rem;
+            color: #00e5c0;
+            margin-bottom: 3px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .user-email, .user-joined {
+            color: #b0b8d1;
+            font-size: 0.93rem;
+            margin-bottom: 6px;
+        }
+
+        .nav-button {
+            background: linear-gradient(90deg, #3fa99c 60%, #c9b458 100%);
+            color: #f6f8fa;
+            border: none;
+            padding: 11px 0;
+            border-radius: 16px;
+            cursor: pointer;
+            font-size: 1.08rem;
+            font-weight: 600;
+            transition: background 0.18s, color 0.18s, box-shadow 0.18s;
+            text-align: center;
+            text-decoration: none;
+            display: block;
+            margin: 0 0 7px 0;
+            box-shadow: 0 2px 8px #3fa99c33;
+        }
+
+        .nav-button:hover, .nav-button.active {
+            background: linear-gradient(90deg, #c9b458 40%, #3fa99c 100%);
+            color: #FFD600;
+            box-shadow: 0 2px 12px #c9b45855;
+        }
+
+        .logout {
+            background: rgba(220, 53, 69, 0.13);
+            color: #dc3545;
+            margin-top: 18px;
+        }
+
+        .logout:hover {
+            background: rgba(220, 53, 69, 0.22);
+            color: #ff4444;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 36px;
+        }
+
+        .card {
+            background: rgba(36, 48, 78, 0.93);
+            padding: 36px 28px 28px 28px;
+            border-radius: 22px;
+            box-shadow: 0 6px 32px #00e5c022, 0 1.5px 0 #FFD60011 inset;
+            height: fit-content;
+        }
+
+        .card h2 {
+            color: #FFD600;
+            margin-bottom: 22px;
+            font-size: 1.32rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .progress-item, .quiz-item {
+            background: rgba(255, 255, 255, 0.04);
+            padding: 18px 16px 16px 16px;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            transition: transform 0.3s ease;
+        }
+
+        .progress-item:hover, .quiz-item:hover {
+            transform: translateY(-3px) scale(1.025);
+        }
+
+        .progress-item h3, .quiz-item h3 {
+            color: #00e5c0;
+            margin-bottom: 12px;
+            font-size: 1.08rem;
+        }
+
+        .progress-bar {
+            background: rgba(255, 255, 255, 0.10);
+            height: 9px;
+            border-radius: 5px;
+            margin: 12px 0 8px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #00e5c0, #FFD600);
+            height: 100%;
+            border-radius: 5px;
+            transition: width 0.5s cubic-bezier(.4,2,.6,1);
+        }
+
+        .quiz-score {
+            font-size: 1.13rem;
+            font-weight: bold;
+            margin: 8px 0 6px 0;
+        }
+
+        .passed {
+            color: #4CAF50;
+        }
+
+        .failed {
+            color: #dc3545;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 13px;
+            margin-top: 18px;
+        }
+
+        .stat-item {
+            background: rgba(255, 255, 255, 0.04);
+            padding: 13px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.35rem;
+            color: #00e5c0;
+            margin-bottom: 3px;
+        }
+
+        .stat-label {
+            color: #b0b8d1;
+            font-size: 0.93rem;
+        }
+
+        .loading {
+            color: #00e5c0;
+            text-align: center;
+            font-size: 1.1rem;
+            margin: 18px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .loading::after {
+            content: '';
+            width: 18px;
+            height: 18px;
+            border: 3px solid #00e5c0;
+            border-top: 3px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error-message {
+            background: rgba(220, 53, 69, 0.1);
+            color: #dc3545;
+            padding: 13px;
+            border-radius: 12px;
+            margin: 13px 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .close-button {
+            background: none;
+            border: none;
+            color: #dc3545;
+            cursor: pointer;
+            font-size: 1.2rem;
+            padding: 5px;
+        }
+
+        @media (max-width: 1024px) {
+            .container {
+                grid-template-columns: 1fr;
+                padding-top: 40px;
+            }
+
+            .sidebar {
+                position: relative;
+                top: 0;
+            }
+
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                gap: 13px;
+            }
+
+            .card {
+                padding: 16px;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .site-name {
+            font-size: 2.3rem;
+            color: #00e5c0;
+            font-weight: bold;
+            text-decoration: none;
+            letter-spacing: 2.5px;
+            text-shadow: 0 2px 16px #00e5c055;
+            transition: color 0.2s;
+        }
+        .site-name:hover {
+            color: #FFD600;
+        }
+
+        /* الروبوت المتحرك */
+        .robot-container {
+            position: fixed;
+            left: 38px;
+            top: 100px;
+            width: 100px;
+            height: 140px;
+            z-index: 999;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        /* الأذرع */
+        .robot-arm {
+            position: absolute;
+            width: 12px;
+            height: 45px;
+            background: linear-gradient(135deg, #2C3E50, #3498db);
+            border-radius: 6px;
+            box-shadow: 0 0 10px rgba(0, 229, 192, 0.3);
+        }
+
+        .robot-arm.left {
+            left: -20px;
+            top: 30%;
+            transform-origin: top center;
+            animation: swingLeft 3s ease-in-out infinite;
+        }
+
+        .robot-arm.right {
+            right: -20px;
+            top: 30%;
+            transform-origin: top center;
+            animation: swingRight 3s ease-in-out infinite;
+        }
+
+        @keyframes swingLeft {
+            0%, 100% { transform: rotate(-5deg); }
+            50% { transform: rotate(15deg); }
+        }
+
+        @keyframes swingRight {
+            0%, 100% { transform: rotate(5deg); }
+            50% { transform: rotate(-15deg); }
+        }
+
+        /* الأرجل */
+        .robot-leg {
+            position: absolute;
+            width: 16px;
+            height: 35px;
+            background: linear-gradient(135deg, #2C3E50, #3498db);
+            border-radius: 6px;
+            bottom: -30px;
+            box-shadow: 0 0 10px rgba(0, 229, 192, 0.3);
+        }
+
+        .robot-leg.left {
+            left: 25%;
+            animation: walkLeft 3s ease-in-out infinite;
+        }
+
+        .robot-leg.right {
+            right: 25%;
+            animation: walkRight 3s ease-in-out infinite;
+        }
+
+        @keyframes walkLeft {
+            0%, 100% { transform: rotate(-5deg); }
+            50% { transform: rotate(5deg); }
+        }
+
+        @keyframes walkRight {
+            0%, 100% { transform: rotate(5deg); }
+            50% { transform: rotate(-5deg); }
+        }
+
+        .robot {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: all 0.3s ease;
+        }
+
+        .robot-body {
+            width: 100%;
+            height: 75%;
+            position: absolute;
+            background: linear-gradient(135deg, #2C3E50, #3498db);
+            border-radius: 20px;
+            box-shadow: 
+                0 5px 15px rgba(0, 229, 192, 0.4),
+                0 0 30px rgba(0, 229, 192, 0.2),
+                inset 0 0 15px rgba(52, 152, 219, 0.5);
+            overflow: hidden;
+        }
+
+        .robot-face {
+            position: absolute;
+            width: 80%;
+            height: 60%;
+            top: 20%;
+            left: 10%;
+            background: rgba(0, 229, 192, 0.1);
+            border-radius: 15px;
+            backdrop-filter: blur(5px);
+        }
+
+        .robot-eye {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background: #FFD600;
+            border-radius: 50%;
+            box-shadow: 0 0 20px #FFD600;
+            animation: glow 2s infinite;
+        }
+
+        .robot-eye.left {
+            top: 40%;
+            left: 25%;
+        }
+
+        .robot-eye.right {
+            top: 40%;
+            right: 25%;
+        }
+
+        .robot-antenna {
+            position: absolute;
+            width: 6px;
+            height: 16px;
+            background: #00e5c0;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 3px;
+            box-shadow: 0 0 15px #00e5c0;
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 20px #FFD600; }
+            50% { box-shadow: 0 0 30px #FFD600, 0 0 40px #FFD600; }
+        }
+
+        /* تأثيرات الحركة */
+        .robot-container:hover {
+            transform: translateY(-5px) scale(1.05);
+        }
+
+        .robot-container:hover .robot-arm.left { animation: swingLeft 1.5s ease-in-out infinite; }
+        .robot-container:hover .robot-arm.right { animation: swingRight 1.5s ease-in-out infinite; }
+        .robot-container:hover .robot-leg.left { animation: walkLeft 1.5s ease-in-out infinite; }
+        .robot-container:hover .robot-leg.right { animation: walkRight 1.5s ease-in-out infinite; }
+
+        /* تحديث حركة القفز */
+        @keyframes jump {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+    </style>
+</head>
+<body>
+    <div class="tech-bg-profile">
+        <svg width="100%" height="100%" viewBox="0 0 1920 1080" fill="none" xmlns="http://www.w3.org/2000/svg" style="position:absolute;top:0;left:0;">
+            <defs>
+                <linearGradient id="circuitLineProfile" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0%" stop-color="#00e5c0" stop-opacity="0.22"/>
+                    <stop offset="100%" stop-color="#FFD600" stop-opacity="0.16"/>
+                </linearGradient>
+            </defs>
+            <polyline points="120,180 400,180 420,260 800,260" stroke="url(#circuitLineProfile)" stroke-width="3.2" fill="none"/>
+            <polyline points="120,400 350,400 370,480 800,480" stroke="url(#circuitLineProfile)" stroke-width="3.2" fill="none"/>
+            <polyline points="120,650 500,650 520,730 800,730" stroke="url(#circuitLineProfile)" stroke-width="3.2" fill="none"/>
+            <polyline points="1800,300 1500,300 1480,380 1100,380" stroke="url(#circuitLineProfile)" stroke-width="3.2" fill="none"/>
+            <polyline points="1800,600 1570,600 1550,680 1100,680" stroke="url(#circuitLineProfile)" stroke-width="3.2" fill="none"/>
+            <rect x="900" y="120" width="260" height="80" rx="18" stroke="#00e5c0" stroke-width="2.5" fill="none" opacity="0.13"/>
+            <rect x="1200" y="320" width="260" height="80" rx="18" stroke="#FFD600" stroke-width="2.5" fill="none" opacity="0.13"/>
+            <rect x="1200" y="520" width="260" height="80" rx="18" stroke="#00e5c0" stroke-width="2.5" fill="none" opacity="0.13"/>
+            <circle cx="600" cy="300" r="110" stroke="#00e5c0" stroke-width="3" fill="none" opacity="0.10"/>
+            <circle cx="1500" cy="800" r="150" stroke="#FFD600" stroke-width="3" fill="none" opacity="0.12"/>
+            <circle cx="1000" cy="500" r="90" stroke="#00e5c0" stroke-width="2.5" fill="none" opacity="0.09"/>
+        </svg>
+    </div>
+    <div class="container">
+        <div class="sidebar">
+            <div class="user-info">
+                <div class="user-avatar" id="userAvatar"></div>
+                <h2 class="user-name" id="userName">Loading...</h2>
+                <div class="user-email" id="userEmail"></div>
+                <div class="user-joined" id="userJoined"></div>
+            </div>
+            <a href="home.html" class="nav-button">Home</a>
+            <a href="tracks.html" class="nav-button">Tracks</a>
+            <a href="roadmaps.html" class="nav-button">Roadmaps</a>
+            <a href="quizzes.html" class="nav-button">Quizzes</a>
+            <button class="nav-button logout" onclick="logout()">Logout</button>
+        </div>
+
+        <div class="main-content">
+            <div class="card">
+                <h2>Course Progress</h2>
+                <div id="progressContent">
+                    <div class="loading">Loading...</div>
+                </div>
+                <div class="stats" id="courseStats">
+                    <div class="stat-item">
+                        <div class="stat-value" id="completedCourses">0</div>
+                        <div class="stat-label">Completed Courses</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="inProgressCourses">0</div>
+                        <div class="stat-label">In Progress</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Quiz Results</h2>
+                <div id="quizProgressContainer" style="margin-bottom: 30px; text-align: center;">
+                    <div style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
+                        <div style="position: relative; width: 110px; height: 110px;">
+                            <svg width="110" height="110">
+                                <circle cx="55" cy="55" r="48" stroke="#233554" stroke-width="10" fill="none"/>
+                                <circle id="quizProgressCircle" cx="55" cy="55" r="48" stroke="#00e5c0" stroke-width="10" fill="none" stroke-linecap="round" style="transform: rotate(-90deg); transform-origin: 50% 50%; transition: stroke-dasharray 0.7s;"/>
+                            </svg>
+                            <div id="quizProgressPercent" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 1.5rem; color: #00e5c0; font-weight: bold;">0%</div>
+                        </div>
+                        <div id="quizProgressText" style="color: #8892b0; font-size: 1rem;">0 of 0 Quizzes Passed</div>
+                    </div>
+                </div>
+                <div id="quizContent">
+                    <div class="loading">Loading...</div>
+                </div>
+                <div class="stats" id="quizStats">
+                    <div class="stat-item">
+                        <div class="stat-value" id="passedQuizzes">0</div>
+                        <div class="stat-label">Passed Quizzes</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="averageScore">0%</div>
+                        <div class="stat-label">Average Score</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="robot-container">
+        <div class="robot">
+            <div class="robot-antenna"></div>
+            <div class="robot-arm left"></div>
+            <div class="robot-arm right"></div>
+            <div class="robot-body">
+                <div class="robot-face">
+                    <div class="robot-eye left"></div>
+                    <div class="robot-eye right"></div>
+                </div>
+            </div>
+            <div class="robot-leg left"></div>
+            <div class="robot-leg right"></div>
+        </div>
+    </div>
+
+    <script>
+        let API_URL = 'http://localhost:5051';
+        let isReconnecting = false;
+
+        // تعريف عدد الكويزات الفعلي (نفس تقسيم Quizzes.html)
+        const QUIZ_TRACKS = [
+            ['HTML','CSS','JavaScript'],
+            ['Python','Java','PHP','Node.js'],
+            ['Introduction to Cyber Security','Cyber Security Essentials','CompTIA Security+','Penetration Testing & Ethical Hacking','Network Security'],
+            ['Python','Git','Data Structures','SQL','Mathematics & Statistics','Data Collection','Machine Learning','Deep Learning','Specialization','Big Data'],
+            ['HTML & CSS','JavaScript','TypeScript','Design Patterns','React','React Native','Dart','Flutter'],
+            ['Linux','Networking','Python','Git','Docker','Jenkins','AWS','Kubernetes','Nginx','Ansible','Terraform']
+        ];
+        const TOTAL_QUIZZES = QUIZ_TRACKS.reduce((acc, arr) => acc + arr.length, 0); // العدد الكلي للكويزات
+
+        // دالة للتحقق من اتصال الخادم
+        async function checkServer() {
+            try {
+                const response = await fetch(`${API_URL}/api/health`, { timeout: 5000 });
+                if (!response.ok) {
+                    throw new Error('Server not responding');
+                }
+                if (isReconnecting) {
+                    isReconnecting = false;
+                    loadProfileData(); // إعادة تحميل البيانات بعد إعادة الاتصال
+                }
+            } catch (error) {
+                if (!isReconnecting) {
+                    console.log('Lost connection to server. Trying other ports...');
+                    isReconnecting = true;
+                }
+                // محاولة الاتصال بمنافذ مختلفة
+                for (let port = 8000; port <= 9000; port++) {
+                    try {
+                        const testUrl = `http://localhost:${port}/api/health`;
+                        const response = await fetch(testUrl, { timeout: 1000 });
+                        if (response.ok) {
+                            API_URL = `http://localhost:5051`;
+                            console.log(`Connected to new port: ${port}`);
+                            loadProfileData();
+                            break;
+                        }
+                    } catch (e) {
+                        continue;
+                    }
+                }
+            }
+        }
+
+        // التحقق من اتصال الخادم كل 30 ثانية
+        setInterval(checkServer, 30000);
+
+        function checkAuth() {
+            const token = localStorage.getItem('token');
+            if (!token || !token.startsWith('Bearer ')) {
+                console.log('No token found or invalid token format');
+                window.location.href = 'Login&Signup.html';
+                return null;
+            }
+            return token;
+        }
+
+        function logout() {
+            // مسح بيانات المستخدم من التخزين المحلي
+            localStorage.removeItem('token');
+            localStorage.removeItem('userName');
+            localStorage.removeItem('userEmail');
+            
+            // التوجيه إلى صفحة تسجيل الدخول
+            window.location.href = 'Login&Signup.html';  // تصحيح مسار التوجيه
+        }
+
+        function getInitials(name) {
+            return name
+                .split(' ')
+                .map(word => word[0])
+                .join('')
+                .substring(0, 2);
+        }
+
+        function updateUserInfo(user) {
+            document.getElementById('userAvatar').textContent = getInitials(user.name);
+            document.getElementById('userName').textContent = user.name;
+            document.getElementById('userEmail').textContent = user.email;
+            document.getElementById('userJoined').textContent = `Joined ${new Date(user.created_at).toLocaleDateString()}`;
+        }
+
+        function updateStats(progress, quizResults) {
+            // Course statistics
+            const completed = progress.filter(p => p.completed).length;
+            const inProgress = progress.length - completed;
+            document.getElementById('completedCourses').textContent = completed;
+            document.getElementById('inProgressCourses').textContent = inProgress;
+
+            // Quiz statistics
+            const passed = quizResults.filter(q => q.passed).length;
+            const averageScore = quizResults.length > 0
+                ? Math.round(quizResults.reduce((acc, q) => acc + q.score, 0) / quizResults.length)
+                : 0;
+            document.getElementById('passedQuizzes').textContent = passed;
+            document.getElementById('averageScore').textContent = `${averageScore}%`;
+        }
+
+        function showError(msg) {
+            // إظهار رسالة خطأ واضحة في الصفحة
+            const container = document.querySelector('.main-content');
+            container.innerHTML = `<div class='error-message' style='color:#dc3545;font-size:1.2rem;text-align:center;padding:30px;'>${msg}</div>`;
+        }
+
+        async function loadProfileData() {
+            const token = checkAuth();
+            if (!token) return;
+            
+            try {
+                console.log('Fetching profile data...');
+                const response = await fetch(`${API_URL}/api/profile`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': token,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                console.log('Profile response status:', response.status);
+                const text = await response.text();
+                let data;
+                try {
+                    data = JSON.parse(text);
+                } catch (e) {
+                    console.error('Failed to parse JSON:', text);
+                    showError('خطأ في استجابة السيرفر.');
+                    return;
+                }
+                console.log('Profile data received:', data);
+
+                if (!response.ok) {
+                    if (response.status === 401) {
+                        console.log('Unauthorized access, redirecting to login');
+                        localStorage.removeItem('token');
+                        localStorage.removeItem('userName');
+                        localStorage.removeItem('userEmail');
+                        window.location.href = 'Login&Signup.html';
+                        return;
+                    }
+                    showError('فشل تحميل بيانات البروفايل.');
+                    return;
+                }
+
+                if (data.error) {
+                    showError(data.error);
+                    return;
+                }
+
+                // حتى لو لم توجد بيانات كورسات أو كويزات، اعرض بيانات المستخدم
+                if (data.user) {
+                    updateUserInfo(data.user);
+                } else {
+                    showError('لم يتم العثور على بيانات المستخدم.');
+                    return;
+                }
+                displayProgress(data.progress || []);
+                displayQuizResults(data.quiz_results || []);
+                updateStats(data.progress || [], data.quiz_results || []);
+                // إظهار معدل التقدم في الكويزات
+                if (typeof updateQuizProgress === 'function') {
+                  await updateQuizProgress();
+                }
+                // إخفاء رسالة الخطأ إذا كانت موجودة
+                const errorMessage = document.querySelector('.error-message');
+                if (errorMessage) {
+                    errorMessage.remove();
+                }
+            } catch (error) {
+                console.error('Profile loading error:', error);
+                showError('تعذر تحميل بيانات البروفايل. تأكد من اتصالك بالسيرفر وحاول مجددًا.');
+            }
+        }
+
+        function displayProgress(progress) {
+            const progressContent = document.getElementById('progressContent');
+            if (!progress || progress.length === 0) {
+                progressContent.innerHTML = '<p style="text-align: center; color: #8892b0;">No courses started yet.</p>';
+                return;
+            }
+
+            progressContent.innerHTML = progress.map(p => `
+                <div class="progress-item" style="background: rgba(36, 48, 78, 0.93); border-radius: 15px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 16px rgba(0, 229, 192, 0.1);">
+                    <h3 style="color: #00e5c0; font-size: 1.2rem; margin-bottom: 15px;">${p.course}</h3>
+                    <div class="progress-bar" style="background: rgba(255, 255, 255, 0.1); height: 12px; border-radius: 6px; overflow: hidden; margin: 15px 0;">
+                        <div class="progress-fill" style="background: linear-gradient(90deg, #00e5c0, #FFD600); height: 100%; width: ${p.score}%; transition: width 0.5s ease;"></div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 12px;">
+                        <span style="color: #f6f8fa; font-weight: 500;">Progress: ${p.score}%</span>
+                        <span style="color: ${p.completed ? '#4CAF50' : '#8892b0'}; font-weight: 500; padding: 4px 12px; border-radius: 12px; background: ${p.completed ? 'rgba(76, 175, 80, 0.1)' : 'rgba(136, 146, 176, 0.1)'};">
+                            ${p.completed ? 'Completed' : 'In Progress'}
+                        </span>
+                    </div>
+                    ${p.last_updated ? `
+                        <div style="color: #8892b0; font-size: 0.9rem; margin-top: 10px;">
+                            Last Updated: ${new Date(p.last_updated).toLocaleDateString()}
+                        </div>
+                    ` : ''}
+                </div>
+            `).join('');
+        }
+
+        function displayQuizResults(results) {
+            const quizContent = document.getElementById('quizContent');
+            if (!results || results.length === 0) {
+                quizContent.innerHTML = '<p style="text-align: center; color: #8892b0;">No quizzes taken yet.</p>';
+                return;
+            }
+
+            quizContent.innerHTML = results.map(q => `
+                <div class="quiz-item">
+                    <h3>${q.course}</h3>
+                    <p style="color: #8892b0;">Track: ${q.track}</p>
+                    <div class="quiz-score ${q.passed ? 'passed' : 'failed'}">
+                        ${q.score}% ${q.passed ? '(Passed)' : '(Failed)'}
+                    </div>
+                    <div style="color: #8892b0; font-size: 0.9rem;">
+                        Date Taken: ${new Date(q.date_taken).toLocaleDateString()}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // تحميل البيانات عند فتح الصفحة
+        window.onload = loadProfileData;
+
+        // تفاعلات الروبوت مع الماوس
+        const robotContainer = document.querySelector('.robot-container');
+        const robot = document.querySelector('.robot');
+
+        // تحريك الروبوت مع حركة الماوس
+        document.addEventListener('mousemove', (e) => {
+            const mouseX = e.clientX / window.innerWidth - 0.5;
+            const mouseY = e.clientY / window.innerHeight - 0.5;
+            
+            if (Math.abs(e.clientX - robotContainer.getBoundingClientRect().left) < 200 &&
+                Math.abs(e.clientY - robotContainer.getBoundingClientRect().top) < 200) {
+                robot.style.transform = `
+                    rotateY(${mouseX * 30}deg)
+                    rotateX(${-mouseY * 30}deg)
+                `;
+            }
+        });
+
+        // تفاعل الروبوت مع السكرول
+        window.addEventListener('scroll', () => {
+            const scrollPercent = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight));
+            
+            robot.style.transform = `
+                rotateY(${Math.sin(scrollPercent * Math.PI * 2) * 20}deg)
+                rotateX(${Math.cos(scrollPercent * Math.PI * 2) * 20}deg)
+                translateY(${Math.sin(scrollPercent * Math.PI) * 10}px)
+            `;
+        });
+
+        // تفاعل عند النقر على الروبوت
+        robotContainer.addEventListener('click', () => {
+            robot.style.animation = 'none';
+            robot.offsetHeight; // trigger reflow
+            robot.style.animation = 'jump 0.5s ease';
+        });
+    </script>
+</body>
+</html>

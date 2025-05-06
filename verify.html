@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Verification - Codify</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a192f 0%, #1a365d 100%);
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+            background: url('data:image/svg+xml;utf8,<svg width="100%25" height="100%25" xmlns="http://www.w3.org/2000/svg"><text x="10" y="60" font-size="48" fill="%2300e5c055" font-family="monospace">{ code }</text><text x="60%25" y="90%25" font-size="38" fill="%2300e5c022" font-family="monospace">&lt;script&gt;</text><text x="30%25" y="30%25" font-size="32" fill="%2300e5c033" font-family="monospace">function()</text><text x="80%" y="20%" font-size="30" fill="%2300e5c044" font-family="monospace">console.log('Hello')</text><text x="15%" y="80%" font-size="36" fill="%2300e5c022" font-family="monospace">&lt;div class='app'&gt;</text><text x="70%" y="50%" font-size="28" fill="%2300e5c033" font-family="monospace">if (user) {'...'}</text><text x="40%" y="15%" font-size="24" fill="%2300e5c022" font-family="monospace">[ ...props ]</text><text x="10%" y="50%" font-size="28" fill="%2300e5c044" font-family="monospace">&lt;!-- HTML --&gt;</text><text x="50%" y="10%" font-size="32" fill="%2300e5c055" font-family="monospace">let x = 42;</text><text x="20%" y="70%" font-size="28" fill="%2300e5c033" font-family="monospace">// TODO: Refactor</text><text x="80%" y="80%" font-size="30" fill="%2300e5c022" font-family="monospace">export default App;</text><text x="30%" y="60%" font-size="32" fill="%2300e5c055" font-family="monospace">for (let i=0;i&lt;10;i++)</text><text x="70%" y="30%" font-size="28" fill="%2300e5c033" font-family="monospace">try { ... } catch(e) {}</text></svg>') no-repeat center center;
+            opacity: 0.18;
+        }
+        .verify-container {
+            background: linear-gradient(120deg, rgba(10,25,47,0.98) 60%, rgba(0,229,192,0.08) 100%);
+            padding: 35px 30px 30px 30px;
+            border-radius: 18px;
+            width: 370px;
+            text-align: center;
+            box-shadow: 0 8px 32px 0 rgba(0,229,192,0.10), 0 1.5px 8px 0 rgba(0,0,0,0.10);
+            backdrop-filter: blur(6px);
+            border: 1.5px solid rgba(0,229,192,0.13);
+            position: relative;
+            z-index: 1;
+        }
+        h2 {
+            color: #00e5c0;
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+        }
+        p {
+            color: #fff;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+        .code-input {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .code-input input {
+            width: 40px;
+            height: 40px;
+            text-align: center;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.93);
+            outline: none;
+            box-shadow: 0 1.5px 6px 0 rgba(0,229,192,0.07);
+            transition: box-shadow 0.3s, background 0.3s;
+        }
+        .code-input input:focus {
+            box-shadow: 0 0 0 2px #00e5c0;
+            background: #f6fffd;
+        }
+        button {
+            width: 100%;
+            padding: 0.85rem;
+            background: linear-gradient(90deg, #00e5c0 60%, #00a3e0 100%);
+            color: #0a192f;
+            border: none;
+            border-radius: 0.75rem;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 2px 8px 0 rgba(0,229,192,0.10);
+            transition: background 0.3s, color 0.3s;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        button:hover:not(:disabled) {
+            background: linear-gradient(90deg, #26a7a7 60%, #00e5c0 100%);
+            color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 229, 192, 0.2);
+        }
+        button:disabled {
+            background: #666;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        .resend-link {
+            color: #00e5c0;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            display: inline-block;
+            padding: 5px;
+        }
+        .resend-link:hover {
+            color: #00a3e0;
+            transform: translateY(-1px);
+        }
+        .message {
+            min-height: 20px;
+            margin: 15px 0;
+            padding: 12px 15px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            line-height: 1.4;
+            background: rgba(255, 59, 48, 0.1);
+            color: #ff3b30;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .message.success {
+            background: rgba(52, 199, 89, 0.1);
+            color: #34c759;
+        }
+        /* زر العودة أعلى الصفحة */
+        .back-btn {
+            position: fixed;
+            top: 18px;
+            left: 18px;
+            z-index: 3;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: none;
+            border: none;
+            color: #00e5c0;
+            font-size: 1.08rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: color 0.2s;
+            opacity: 0.85;
+        }
+        .back-btn:hover {
+            color: #00a3e0;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="verify-container">
+        <h2>Email Verification</h2>
+        <p>We've sent a secure verification code to your email address. Please enter the 6-digit code to activate your account and start your learning journey.</p>
+        <div class="message" id="message"></div>
+        <div class="code-input">
+            <input type="text" maxlength="1" pattern="[0-9]" inputmode="numeric">
+            <input type="text" maxlength="1" pattern="[0-9]" inputmode="numeric">
+            <input type="text" maxlength="1" pattern="[0-9]" inputmode="numeric">
+            <input type="text" maxlength="1" pattern="[0-9]" inputmode="numeric">
+            <input type="text" maxlength="1" pattern="[0-9]" inputmode="numeric">
+            <input type="text" maxlength="1" pattern="[0-9]" inputmode="numeric">
+        </div>
+        <button onclick="verifyCode()" id="verifyBtn">Verify Email</button>
+        <a href="#" class="resend-link" onclick="resendCode()">Didn't receive the code? Send again</a>
+        <!-- زر العودة أعلى الصفحة -->
+        <button class="back-btn" onclick="window.history.back()" title="Back" style="position: fixed; top: 18px; left: 18px; width: 38px; height: 38px; border-radius: 50%; background: rgba(0,229,192,0.13); display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px 0 rgba(0,229,192,0.10); border: none;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15 18L9 12L15 6" stroke="#00e5c0" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:5051';
+        const inputs = document.querySelectorAll('.code-input input');
+        const messageEl = document.getElementById('message');
+        const verifyBtn = document.getElementById('verifyBtn');
+        let email = new URLSearchParams(window.location.search).get('email');
+
+        // التنقل التلقائي بين حقول الإدخال
+        inputs.forEach((input, index) => {
+            input.addEventListener('input', (e) => {
+                if (e.target.value.length === 1) {
+                    if (index < inputs.length - 1) {
+                        inputs[index + 1].focus();
+                    }
+                }
+            });
+
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace' && !e.target.value && index > 0) {
+                    inputs[index - 1].focus();
+                }
+            });
+        });
+
+        // التحقق من الرمز
+        async function verifyCode() {
+            const code = Array.from(inputs).map(input => input.value).join('');
+            if (code.length !== 6) {
+                messageEl.textContent = 'Please enter the complete 6-digit verification code';
+                messageEl.className = 'message';
+                return;
+            }
+
+            verifyBtn.disabled = true;
+            try {
+                const res = await fetch(`${API_URL}/verify`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        code: code
+                    })
+                });
+
+                const data = await res.json();
+                
+                if (res.ok) {
+                    // إذا السيرفر أرجع توكن وبيانات المستخدم
+                    if (data.token && data.user) {
+                        localStorage.setItem("token", `Bearer ${data.token}`);
+                        localStorage.setItem("userName", data.user.name);
+                        localStorage.setItem("userEmail", data.user.email);
+                        messageEl.textContent = '✓ Account verified successfully! Redirecting to your profile...';
+                        messageEl.className = 'message success';
+                        setTimeout(() => {
+                            window.location.href = 'profile.html';
+                        }, 2000);
+                    } else {
+                        // إذا لم يرجع توكن، أعد التوجيه لتسجيل الدخول
+                        messageEl.textContent = '✓ Account verified successfully! Redirecting to login...';
+                        messageEl.className = 'message success';
+                        setTimeout(() => {
+                            window.location.href = 'Login&Signup.html';
+                        }, 2000);
+                    }
+                } else {
+                    messageEl.textContent = data.error || 'Invalid verification code. Please check and try again.';
+                    messageEl.className = 'message';
+                    verifyBtn.disabled = false;
+                }
+            } catch (error) {
+                messageEl.textContent = 'A network error occurred. Please try again.';
+                messageEl.className = 'message';
+                verifyBtn.disabled = false;
+            }
+        }
+
+        // إعادة إرسال الرمز
+        async function resendCode() {
+            try {
+                const res = await fetch(`${API_URL}/resend-verification`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email: email })
+                });
+
+                const data = await res.json();
+                
+                if (res.ok) {
+                    messageEl.textContent = '✓ New verification code sent! Please check your email.';
+                    messageEl.className = 'message success';
+                    inputs.forEach(input => input.value = '');
+                    inputs[0].focus();
+                } else {
+                    messageEl.textContent = data.error || 'Failed to send verification code. Please try again.';
+                    messageEl.className = 'message';
+                }
+            } catch (error) {
+                messageEl.textContent = 'A network error occurred. Please try again.';
+                messageEl.className = 'message';
+            }
+        }
+
+        // التحقق من وجود البريد الإلكتروني
+        if (!email) {
+            window.location.href = 'Login&Signup.html';
+        }
+    </script>
+</body>
+</html> 

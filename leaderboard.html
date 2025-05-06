@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaderboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        .fade-out {
+            opacity: 0;
+            transform: scale(0.9);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        body {
+            background: url('background.png') no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            color: #aaf1cf;
+        }
+        header {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            background: none;
+        }
+        .site-name {
+            font-size: 25px;
+            color: #CCD6F6;
+            font-weight: bold;
+            text-decoration: none;
+        }
+        .container {
+            text-align: center;
+            margin-top: 80px;
+            width: 90%;
+            max-width: 1200px;
+        }
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: #00e5c0;
+        }
+        .leaderboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+        .category {
+            background: rgba(255, 255, 255, 0.055);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.098);
+        }
+        .category h2 {
+            font-size: 1.5rem;
+            color: #7fffd4;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .category ul {
+            list-style: none;
+            padding: 0;
+        }
+        .category li {
+            background: #1b3b5f;
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin: 8px 0;
+            color: white;
+            font-size: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: transform 0.2s;
+        }
+        .category li:hover {
+            transform: translateX(5px);
+            background: #234b7a;
+        }
+        .medal {
+            margin-right: 8px;
+            font-size: 1.2em;
+        }
+        .score {
+            color: #00e5c0;
+            font-weight: bold;
+        }
+        .loading {
+            text-align: center;
+            padding: 20px;
+            font-size: 1.2rem;
+            color: #CCD6F6;
+        }
+        .error {
+            color: #ff6b6b;
+            text-align: center;
+            padding: 20px;
+        }
+        .refresh-btn {
+            background: #00e5c0;
+            color: #1b3b5f;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-bottom: 20px;
+            transition: background-color 0.3s;
+        }
+        .refresh-btn:hover {
+            background: #26a7a7;
+            color: white;
+        }
+    </style>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+    // تشغيل تأثير الدخول عند تحميل الصفحة
+    document.body.classList.add("loaded");
+
+    // إضافة تأثير الخروج عند الضغط على أي رابط
+    document.querySelectorAll("a").forEach(link => {
+        link.addEventListener("click", function (e) {
+            e.preventDefault(); // منع الانتقال الفوري
+            let targetUrl = this.href; // حفظ الرابط اللي المفروض يروح له
+
+            // إضافة كلاس الأنيميشن
+            document.body.classList.add("fade-out");
+
+            // انتظار نصف ثانية ثم الانتقال للصفحة
+            setTimeout(() => {
+                window.location.href = targetUrl;
+                             }, 500);
+                             });
+                        });
+                       });
+    </script>
+</head>
+<body>
+    <header>
+        <div class="header-left">
+            <a href="home.html" class="site-name">CODIFY</a>
+        </div>
+    </header>
+    <div class="container">
+        <h1>Leaderboard</h1>
+        <button class="refresh-btn" onclick="loadLeaderboard()">
+            Refresh Leaderboard
+        </button>
+        <div id="leaderboardContainer" class="leaderboard">
+            <div class="loading">Loading leaderboard data...</div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:8765';
+        const TRACKS = [
+            'Front End',
+            'Back End',
+            'Cyber Security',
+            'Data Science',
+            'Mobile App',
+            'DevOps'
+        ];
+
+        async function loadLeaderboard() {
+            const container = document.getElementById('leaderboardContainer');
+            container.innerHTML = '<div class="loading">Loading leaderboard data...</div>';
+
+            try {
+                const response = await fetch(`${API_URL}/leaderboard`);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch leaderboard data');
+                }
+
+                const data = await response.json();
+                displayLeaderboard(data.leaderboard);
+            } catch (error) {
+                console.error('Error:', error);
+                container.innerHTML = `
+                    <div class="error">
+                        Failed to load leaderboard data. Please try again.
+                        <br><br>
+                        <button class="refresh-btn" onclick="loadLeaderboard()">
+                            Try Again
+                        </button>
+                    </div>
+                `;
+            }
+        }
+
+        function displayLeaderboard(leaderboardData) {
+            const container = document.getElementById('leaderboardContainer');
+            container.innerHTML = '';
+
+            // Create a category for each track
+            TRACKS.forEach(track => {
+                const trackUsers = leaderboardData.filter(user => 
+                    user.track === track
+                ).sort((a, b) => b.passed_quizzes - a.passed_quizzes);
+
+                const categoryDiv = document.createElement('div');
+                categoryDiv.className = 'category';
+                categoryDiv.innerHTML = `
+                    <h2>▶ ${track}</h2>
+                    <ul>
+                        ${trackUsers.slice(0, 5).map((user, index) => `
+                            <li>
+                                <span>
+                                    ${getMedal(index)}
+                                    ${user.name}
+                                </span>
+                                <span class="score">${user.passed_quizzes} Quizzes</span>
+                            </li>
+                        `).join('')}
+                    </ul>
+                `;
+                container.appendChild(categoryDiv);
+            });
+        }
+
+        function getMedal(index) {
+            const medals = ['🥇', '🥈', '🥉'];
+            return index < 3 ? medals[index] : '';
+        }
+
+        // Load leaderboard when page loads
+        window.onload = loadLeaderboard;
+    </script>
+</body>
+</html>
