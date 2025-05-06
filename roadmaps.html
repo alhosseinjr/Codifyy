@@ -1,0 +1,1359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Codify Roadmaps</title>
+    <style>
+        body {
+            font-family: 'Cairo', 'Segoe UI', Arial, sans-serif;
+            color: #f6f8fa;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #181c2b 0%, #232b47 60%, #1a2a3a 100%);
+            position: relative;
+            overflow-x: hidden;
+        }
+        .fade-out {
+            opacity: 0;
+            transform: scale(0.9);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        header {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            background: rgba(24, 28, 43, 0.95);
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        nav {
+            background: rgba(20, 32, 54, 0.92);
+            padding: 10px 22px;
+            border-radius: 18px;
+            box-shadow: 0 4px 24px #00e5c033;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 1200;
+            transition: background 0.2s;
+            margin-left: auto;
+            margin-right: 50px;
+        }
+
+        nav a {
+            color: #CCD6F6;
+            text-decoration: none;
+            margin: 0 10px;
+            font-size: 1.13rem;
+            font-weight: 500;
+            padding: 7px 16px;
+            border-radius: 12px;
+            transition: background 0.18s, color 0.18s;
+            position: relative;
+        }
+
+        nav a.active, nav a:hover {
+            background: linear-gradient(90deg, #00e5c0 60%, #FFD600 100%);
+            color: #233554;
+            box-shadow: 0 2px 8px #00e5c055;
+        }
+
+        .nav-hamburger {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 38px;
+            height: 38px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        .nav-hamburger span {
+            display: block;
+            width: 26px;
+            height: 4px;
+            background: #00e5c0;
+            margin: 3px 0;
+            border-radius: 2px;
+            transition: 0.3s;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .site-name {
+            font-size: 2.3rem;
+            color: #00e5c0;
+            font-weight: bold;
+            text-decoration: none;
+            letter-spacing: 2.5px;
+            text-shadow: 0 2px 16px #00e5c055;
+            transition: color 0.2s;
+        }
+        .site-name:hover {
+            color: #FFD600;
+        }
+
+        .container {
+            width: 85%;
+            margin: auto;
+            padding-top: 40px;
+            position: relative;
+            z-index: 1;
+        }
+
+        h1 {
+            font-size: 48px;
+            color: #00e5c0;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            font-size: 36px;
+            color: #CCD6F6;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        h3 {
+            font-size: 28px;
+            color: #00e5c0;
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .roadmap-item {
+            background: rgba(28, 61, 90, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .roadmap-item h4 {
+            font-size: 22px;
+            color: #00e5c0;
+            margin-bottom: 10px;
+        }
+
+        .roadmap-item p {
+            font-size: 16px;
+            color: #CCD6F6;
+        }
+        .roadmap-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 44px 44px;
+            margin-top: 0;
+            row-gap: 54px;
+        }
+        .track-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px 32px;
+            margin-bottom: 40px;
+        }
+        .track-col {
+            background: rgba(17,34,64,0.85);
+            border-radius: 18px;
+            padding: 24px 18px 18px 18px;
+            box-shadow: 0 4px 24px #0002;
+            min-width: 260px;
+            min-height: 320px;
+            position: relative;
+            margin-bottom: 0;
+        }
+        .track-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 18px;
+        }
+        .track-title {
+            color: #FFD600;
+            font-size: 1.45rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+            margin-bottom: 0;
+        }
+        .track-desc {
+            color: #CCD6F6;
+            font-size: 1.08rem;
+            margin-bottom: 18px;
+        }
+        .resources-col {
+            background: rgba(28,61,90,0.92);
+            border-radius: 10px;
+            padding: 12px 14px;
+            min-width: 150px;
+            box-shadow: 0 2px 12px #0002;
+            margin-bottom: 22px;
+        }
+        .resources-col h3 {
+            color: #FFD600;
+            font-size: 1.05rem;
+            margin-bottom: 8px;
+            text-align: left;
+        }
+        .resources-list {
+            list-style-type: disc;
+            padding-left: 18px;
+        }
+        .resources-list li {
+            margin-bottom: 8px;
+            display: list-item;
+            color: #CCD6F6;
+        }
+        .resources-list a {
+            color: #00e5c0;
+            text-decoration: none;
+            font-size: 1rem;
+        }
+        .resources-list a:hover {
+            text-decoration: underline;
+        }
+        .course-card {
+            background: rgba(36, 48, 78, 0.93);
+            border-radius: 20px;
+            padding: 32px 28px 22px 28px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            box-shadow: 0 6px 32px #00e5c022, 0 1.5px 0 #FFD60011 inset;
+            position: relative;
+            min-height: 120px;
+            transition: transform 0.18s, box-shadow 0.18s;
+        }
+        .course-card:hover {
+            transform: translateY(-7px) scale(1.03);
+            box-shadow: 0 12px 40px #00e5c055, 0 1.5px 0 #FFD60022 inset;
+        }
+        .course-title-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 4px;
+        }
+        .course-title {
+            color: #00e5c0;
+            font-size: 1.13rem;
+            font-weight: bold;
+            margin-bottom: 0;
+        }
+        .course-card-desc {
+            color: #CCD6F6;
+            font-size: 1rem;
+            margin-bottom: 0;
+        }
+        .course-link {
+            background: linear-gradient(90deg, #3fa99c 60%, #c9b458 100%);
+            color: #f6f8fa;
+            font-size: 1rem;
+            font-weight: 500;
+            border: none;
+            border-radius: 22px;
+            padding: 7px 18px 7px 14px;
+            box-shadow: 0 2px 8px #3fa99c33;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+            word-break: break-all;
+        }
+        .course-link:hover {
+            background: linear-gradient(90deg, #c9b458 40%, #3fa99c 100%);
+            color: #FFD600;
+            box-shadow: 0 4px 16px #c9b45855;
+            text-decoration: none;
+        }
+        .course-link svg {
+            width: 18px;
+            height: 18px;
+            fill: #FFD600;
+            flex-shrink: 0;
+        }
+        .course-resources {
+            margin-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .course-resources a {
+            color: #FFD600;
+            font-size: 0.98rem;
+            text-decoration: underline;
+            word-break: break-all;
+        }
+        .courses-col {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+        .roadmap-section {
+            margin-bottom: 54px;
+        }
+        .track-header-bar {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            margin-bottom: 22px;
+        }
+        .track-progress-bar {
+            width: 260px;
+            height: 22px;
+            background: #233554;
+            border-radius: 12px;
+            margin-bottom: 0;
+            overflow: hidden;
+            box-shadow: 0 2px 8px #00e5c033;
+            position: relative;
+            flex-shrink: 0;
+        }
+        .track-progress-bar-inner {
+            height: 100%;
+            background: linear-gradient(90deg, #00e5c0 60%, #FFD600 100%);
+            border-radius: 12px;
+            transition: width 0.4s cubic-bezier(.4,2,.6,1);
+        }
+        .track-progress-label {
+            position: absolute;
+            right: 18px;
+            top: 0;
+            font-size: 1.1rem;
+            color: #FFD600;
+            font-weight: bold;
+            z-index: 2;
+            text-shadow: 0 1px 4px #000a;
+        }
+        .course-title-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 4px;
+        }
+        .course-resources {
+            margin-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .course-resources a {
+            color: #FFD600;
+            font-size: 0.98rem;
+            text-decoration: underline;
+            word-break: break-all;
+        }
+        .resources-section {
+            margin-top: 40px;
+        }
+
+        .resources-list {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .resources-list li {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .resources-list input[type="checkbox"] {
+            margin-right: 10px;
+        }
+
+        .resources-list a {
+            color: #00e5c0;
+            text-decoration: none;
+            font-size: 18px;
+        }
+
+        .resources-list a:hover {
+            text-decoration: underline;
+        }
+
+        /* خلفية تقنية SVG */
+        .tech-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.22;
+        }
+        /* checkbox عصري */
+        .custom-checkbox {
+            appearance: none;
+            width: 22px;
+            height: 22px;
+            border: 2px solid #00e5c0;
+            border-radius: 6px;
+            background: rgba(0,229,192,0.07);
+            outline: none;
+            cursor: pointer;
+            position: relative;
+            transition: border 0.2s, box-shadow 0.2s;
+            margin-right: 14px;
+            vertical-align: middle;
+        }
+        .custom-checkbox:checked {
+            background: linear-gradient(135deg, #00e5c0 60%, #233554 100%);
+            border-color: #00e5c0;
+        }
+        .custom-checkbox:checked::after {
+            content: '';
+            position: absolute;
+            left: 5px; top: 2px;
+            width: 7px; height: 13px;
+            border: solid #fff;
+            border-width: 0 3px 3px 0;
+            transform: rotate(45deg);
+        }
+        .resources-footer {
+            position: absolute;
+            left: 0; right: 0; bottom: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            opacity: 0.7;
+            pointer-events: none;
+        }
+        .resources-footer svg {
+            margin-bottom: 4px;
+        }
+        .resources-footer-text {
+            color: #FFD600;
+            font-size: 0.95rem;
+            font-style: italic;
+            text-align: center;
+            letter-spacing: 0.5px;
+        }
+        @media (max-width: 900px) {
+            .roadmap-content { grid-template-columns: 1fr; }
+        }
+        /* Progress Bar عصري صغير */
+        .track-header-bar {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 18px;
+        }
+        .track-progress-bar {
+            width: 260px;
+            height: 22px;
+            background: #233554;
+            border-radius: 10px;
+            margin-bottom: 0;
+            overflow: hidden;
+            box-shadow: 0 2px 8px #00e5c033;
+            position: relative;
+            flex-shrink: 0;
+        }
+        .track-progress-bar-inner {
+            height: 100%;
+            background: linear-gradient(90deg, #00e5c0 60%, #FFD600 100%);
+            border-radius: 10px;
+            transition: width 0.4s cubic-bezier(.4,2,.6,1);
+        }
+        .track-progress-label {
+            position: absolute;
+            right: 18px;
+            top: 0;
+            font-size: 1.18rem;
+            color: #FFD600;
+            font-weight: bold;
+            z-index: 2;
+            text-shadow: 0 1px 4px #000a;
+        }
+        .course-title-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 4px;
+        }
+        @media (max-width: 700px) {
+            nav {
+                flex-direction: column;
+                align-items: flex-end;
+                padding: 10px 10px;
+                right: 10px;
+                top: 10px;
+                min-width: 0;
+            }
+            nav .nav-links {
+                display: none;
+                flex-direction: column;
+                gap: 8px;
+                width: 160px;
+                background: rgba(20,32,54,0.98);
+                border-radius: 14px;
+                box-shadow: 0 4px 24px #00e5c033;
+                margin-top: 8px;
+                padding: 10px 0;
+            }
+            nav.open .nav-links {
+                display: flex;
+            }
+            .nav-hamburger {
+                display: flex;
+            }
+        }
+        /* الروبوت المتحرك */
+        .robot-container {
+            position: fixed;
+            left: 38px;
+            top: 100px;
+            width: 100px;
+            height: 140px;
+            z-index: 999;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        /* الأذرع */
+        .robot-arm {
+            position: absolute;
+            width: 12px;
+            height: 45px;
+            background: linear-gradient(135deg, #2C3E50, #3498db);
+            border-radius: 6px;
+            box-shadow: 0 0 10px rgba(0, 229, 192, 0.3);
+        }
+
+        .robot-arm.left {
+            left: -20px;
+            top: 30%;
+            transform-origin: top center;
+            animation: swingLeft 3s ease-in-out infinite;
+        }
+
+        .robot-arm.right {
+            right: -20px;
+            top: 30%;
+            transform-origin: top center;
+            animation: swingRight 3s ease-in-out infinite;
+        }
+
+        @keyframes swingLeft {
+            0%, 100% { transform: rotate(-5deg); }
+            50% { transform: rotate(15deg); }
+        }
+
+        @keyframes swingRight {
+            0%, 100% { transform: rotate(5deg); }
+            50% { transform: rotate(-15deg); }
+        }
+
+        /* الأرجل */
+        .robot-leg {
+            position: absolute;
+            width: 16px;
+            height: 35px;
+            background: linear-gradient(135deg, #2C3E50, #3498db);
+            border-radius: 6px;
+            bottom: -30px;
+            box-shadow: 0 0 10px rgba(0, 229, 192, 0.3);
+        }
+
+        .robot-leg.left {
+            left: 25%;
+            animation: walkLeft 3s ease-in-out infinite;
+        }
+
+        .robot-leg.right {
+            right: 25%;
+            animation: walkRight 3s ease-in-out infinite;
+        }
+
+        @keyframes walkLeft {
+            0%, 100% { transform: rotate(-5deg); }
+            50% { transform: rotate(5deg); }
+        }
+
+        @keyframes walkRight {
+            0%, 100% { transform: rotate(5deg); }
+            50% { transform: rotate(-5deg); }
+        }
+
+        .robot {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: all 0.3s ease;
+        }
+
+        .robot-body {
+            width: 100%;
+            height: 75%;
+            position: absolute;
+            background: linear-gradient(135deg, #2C3E50, #3498db);
+            border-radius: 20px;
+            box-shadow: 
+                0 5px 15px rgba(0, 229, 192, 0.4),
+                0 0 30px rgba(0, 229, 192, 0.2),
+                inset 0 0 15px rgba(52, 152, 219, 0.5);
+            overflow: hidden;
+        }
+
+        .robot-face {
+            position: absolute;
+            width: 80%;
+            height: 60%;
+            top: 20%;
+            left: 10%;
+            background: rgba(0, 229, 192, 0.1);
+            border-radius: 15px;
+            backdrop-filter: blur(5px);
+        }
+
+        .robot-eye {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background: #FFD600;
+            border-radius: 50%;
+            box-shadow: 0 0 20px #FFD600;
+            animation: glow 2s infinite;
+        }
+
+        .robot-eye.left {
+            top: 40%;
+            left: 25%;
+        }
+
+        .robot-eye.right {
+            top: 40%;
+            right: 25%;
+        }
+
+        .robot-antenna {
+            position: absolute;
+            width: 6px;
+            height: 16px;
+            background: #00e5c0;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 3px;
+            box-shadow: 0 0 15px #00e5c0;
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 20px #FFD600; }
+            50% { box-shadow: 0 0 30px #FFD600, 0 0 40px #FFD600; }
+        }
+
+        /* تأثيرات الحركة */
+        .robot-container:hover {
+            transform: translateY(-5px) scale(1.05);
+        }
+
+        .robot-container:hover .robot-arm.left { animation: swingLeft 1.5s ease-in-out infinite; }
+        .robot-container:hover .robot-arm.right { animation: swingRight 1.5s ease-in-out infinite; }
+        .robot-container:hover .robot-leg.left { animation: walkLeft 1.5s ease-in-out infinite; }
+        .robot-container:hover .robot-leg.right { animation: walkRight 1.5s ease-in-out infinite; }
+
+        /* تحديث حركة القفز */
+        @keyframes jump {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+    </style>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // nav bar: scroll smoothly and highlight active
+            const navLinks = document.querySelectorAll('nav .nav-links a');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href').replace('#','');
+                    const target = document.getElementById(targetId);
+                    if(target) {
+                        window.scrollTo({
+                            top: target.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                    }
+                    // إغلاق القائمة في الجوال
+                    document.querySelector('nav').classList.remove('open');
+                });
+            });
+            // highlight active section
+            window.addEventListener('scroll', function() {
+                let fromTop = window.scrollY + 100;
+                navLinks.forEach(link => {
+                    const section = document.querySelector(link.getAttribute('href'));
+                    if(section && section.offsetTop <= fromTop && section.offsetTop + section.offsetHeight > fromTop) {
+                        link.classList.add('active');
+                    } else {
+                        link.classList.remove('active');
+                    }
+                });
+            });
+            // hamburger menu
+            const navHamburger = document.getElementById('navHamburger');
+            navHamburger.addEventListener('click', function() {
+                document.querySelector('nav').classList.toggle('open');
+            });
+        });
+
+        // حفظ الكورسات المكتملة في localStorage
+        function getCompletedCourses() {
+            return JSON.parse(localStorage.getItem('completedCourses') || '[]');
+        }
+        function setCompletedCourses(arr) {
+            localStorage.setItem('completedCourses', JSON.stringify(arr));
+        }
+        function toggleCourse(course) {
+            let arr = getCompletedCourses();
+            if (arr.includes(course)) {
+                arr = arr.filter(c => c !== course);
+            } else {
+                arr.push(course);
+            }
+            setCompletedCourses(arr);
+            updateCheckboxes();
+        }
+        function updateCheckboxes() {
+            const arr = getCompletedCourses();
+            document.querySelectorAll('.custom-checkbox').forEach(cb => {
+                cb.checked = arr.includes(cb.value);
+            });
+        }
+        document.addEventListener('DOMContentLoaded', function() {
+            // إزالة التشيك مارك من الريسورسز القديمة
+            document.querySelectorAll('.resources-list input[type="checkbox"]').forEach(cb => cb.remove());
+            // إعادة بناء كل تراك حسب التصميم الجديد
+            document.querySelectorAll('.roadmap-section').forEach(section => {
+                // استخراج العنوان والكورسات
+                const title = section.querySelector('h3');
+                const content = section.querySelector('.roadmap-content');
+                const courseItems = Array.from(content.querySelectorAll('.roadmap-item'));
+                // بناء رأس التراك: عنوان + بروجريس بار في سطر واحد
+                const headerBar = document.createElement('div');
+                headerBar.className = 'track-header-bar';
+                const titleDiv = document.createElement('div');
+                titleDiv.className = 'track-title';
+                titleDiv.textContent = title.textContent;
+                // بروجريس بار صغير بجانب العنوان
+                const progressBar = document.createElement('div');
+                progressBar.className = 'track-progress-bar';
+                const progressInner = document.createElement('div');
+                progressInner.className = 'track-progress-bar-inner';
+                progressBar.appendChild(progressInner);
+                const progressLabel = document.createElement('span');
+                progressLabel.className = 'track-progress-label';
+                progressBar.appendChild(progressLabel);
+                headerBar.appendChild(titleDiv);
+                headerBar.appendChild(progressBar);
+                // بناء جريد الكورسات (كل صف فيه مربعين)
+                const coursesGrid = document.createElement('div');
+                coursesGrid.className = 'roadmap-content';
+                // لكل كورس: أضف تشيك مارك عصري بجانب الاسم
+                courseItems.forEach(item => {
+                    const card = document.createElement('div');
+                    card.className = 'course-card';
+                    // اسم الكورس كعنوان مع تشيك مارك
+                    const h4 = item.querySelector('h4');
+                    if (h4) {
+                        const courseTitleCheckbox = document.createElement('div');
+                        courseTitleCheckbox.className = 'course-title-checkbox';
+                        // تشيك مارك عصري
+                        const checkbox = document.createElement('input');
+                        checkbox.type = 'checkbox';
+                        checkbox.className = 'custom-checkbox';
+                        checkbox.value = h4.textContent.trim();
+                        checkbox.addEventListener('change', function() {
+                            toggleCourse(checkbox.value);
+                            updateTrackProgress(section, courseItems);
+                        });
+                        courseTitleCheckbox.appendChild(checkbox);
+                        // اسم الكورس
+                        const courseTitle = document.createElement('div');
+                        courseTitle.className = 'course-title';
+                        courseTitle.textContent = h4.textContent;
+                        courseTitleCheckbox.appendChild(courseTitle);
+                        card.appendChild(courseTitleCheckbox);
+                    }
+                    // انقل الوصف (p) من roadmap-item
+                    const p = item.querySelector('p');
+                    if (p) {
+                        const desc = document.createElement('div');
+                        desc.className = 'course-card-desc';
+                        desc.textContent = p.textContent;
+                        card.appendChild(desc);
+                    }
+                    // ابحث عن أول لينك متعلق بالكورس (من resources-list)
+                    let firstLink = null;
+                    const allLinks = Array.from(section.querySelectorAll('.resources-list a'));
+                    const courseName = h4 ? h4.textContent.trim() : '';
+                    for (const link of allLinks) {
+                        if (link.textContent.toLowerCase().includes(courseName.toLowerCase().split(' ')[0])) {
+                            firstLink = link.cloneNode(true);
+                            break;
+                        }
+                    }
+                    if (firstLink) {
+                        firstLink.className = 'course-link';
+                        // أضف أيقونة كتاب SVG قبل النص
+                        const icon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                        icon.setAttribute('viewBox', '0 0 20 20');
+                        icon.innerHTML = '<path d="M4 4.5A2.5 2.5 0 0 1 6.5 2h9A1.5 1.5 0 0 1 17 3.5v12A1.5 1.5 0 0 1 15.5 17h-9A2.5 2.5 0 0 1 4 14.5V4.5ZM6.5 3A1.5 1.5 0 0 0 5 4.5v10A1.5 1.5 0 0 0 6.5 16H15.5a.5.5 0 0 0 .5-.5v-12a.5.5 0 0 0-.5-.5h-9Z"/>';
+                        firstLink.prepend(icon);
+                        card.appendChild(firstLink);
+                    }
+                    coursesGrid.appendChild(card);
+                });
+                // إعادة بناء التراك
+                section.innerHTML = '';
+                section.appendChild(headerBar);
+                section.appendChild(coursesGrid);
+                // تحديث البروجريس بار عند التحميل
+                updateTrackProgress(section, courseItems);
+            });
+            // تحديث كل التشيك بوكسات عند التحميل
+            updateCheckboxes();
+        });
+        // تحديث بروجريس بار تراك معين
+        function updateTrackProgress(section, courseItems) {
+            const checkboxes = section.querySelectorAll('.custom-checkbox');
+            const total = checkboxes.length;
+            let completed = 0;
+            const completedArr = getCompletedCourses();
+            checkboxes.forEach(cb => {
+                if (completedArr.includes(cb.value)) completed++;
+            });
+            const percent = total ? Math.round((completed/total)*100) : 0;
+            const progressBar = section.querySelector('.track-progress-bar-inner');
+            const progressLabel = section.querySelector('.track-progress-label');
+            if (progressBar) progressBar.style.width = percent + '%';
+            if (progressLabel) progressLabel.textContent = percent + '%';
+        }
+
+        // تفاعلات الروبوت مع الماوس
+        const robotContainer = document.querySelector('.robot-container');
+        const robot = document.querySelector('.robot');
+
+        // تحريك الروبوت مع حركة الماوس
+        document.addEventListener('mousemove', (e) => {
+            const mouseX = e.clientX / window.innerWidth - 0.5;
+            const mouseY = e.clientY / window.innerHeight - 0.5;
+            
+            if (Math.abs(e.clientX - robotContainer.getBoundingClientRect().left) < 200 &&
+                Math.abs(e.clientY - robotContainer.getBoundingClientRect().top) < 200) {
+                robot.style.transform = `
+                    rotateY(${mouseX * 30}deg)
+                    rotateX(${-mouseY * 30}deg)
+                `;
+            }
+        });
+
+        // تفاعل الروبوت مع السكرول
+        window.addEventListener('scroll', () => {
+            const scrollPercent = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight));
+            
+            robot.style.transform = `
+                rotateY(${Math.sin(scrollPercent * Math.PI * 2) * 20}deg)
+                rotateX(${Math.cos(scrollPercent * Math.PI * 2) * 20}deg)
+                translateY(${Math.sin(scrollPercent * Math.PI) * 10}px)
+            `;
+                             });
+
+        // تفاعل عند النقر على الروبوت
+        robotContainer.addEventListener('click', () => {
+            robot.style.animation = 'none';
+            robot.offsetHeight; // trigger reflow
+            robot.style.animation = 'jump 0.5s ease';
+                       });
+    </script>
+</head>
+<body>
+    <div class="robot-container">
+        <div class="robot">
+            <div class="robot-antenna"></div>
+            <div class="robot-arm left"></div>
+            <div class="robot-arm right"></div>
+            <div class="robot-body">
+                <div class="robot-face">
+                    <div class="robot-eye left"></div>
+                    <div class="robot-eye right"></div>
+                </div>
+            </div>
+            <div class="robot-leg left"></div>
+            <div class="robot-leg right"></div>
+        </div>
+    </div>
+    <div class="tech-bg">
+        <svg width="100%" height="100%" viewBox="0 0 1920 1080" fill="none" xmlns="http://www.w3.org/2000/svg" style="position:absolute;top:0;left:0;">
+            <defs>
+                <linearGradient id="circuitLine" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0%" stop-color="#00e5c0" stop-opacity="0.18"/>
+                    <stop offset="100%" stop-color="#FFD600" stop-opacity="0.13"/>
+                </linearGradient>
+            </defs>
+            <polyline points="100,100 300,100 320,180 600,180" stroke="url(#circuitLine)" stroke-width="2" fill="none"/>
+            <polyline points="100,300 250,300 270,380 600,380" stroke="url(#circuitLine)" stroke-width="2" fill="none"/>
+            <polyline points="100,500 350,500 370,580 600,580" stroke="url(#circuitLine)" stroke-width="2" fill="none"/>
+            <polyline points="1820,200 1620,200 1600,280 1300,280" stroke="url(#circuitLine)" stroke-width="2" fill="none"/>
+            <polyline points="1820,400 1670,400 1650,480 1300,480" stroke="url(#circuitLine)" stroke-width="2" fill="none"/>
+            <polyline points="1820,600 1550,600 1530,680 1300,680" stroke="url(#circuitLine)" stroke-width="2" fill="none"/>
+            <rect x="650" y="120" width="260" height="80" rx="12" stroke="#00e5c0" stroke-width="1.5" fill="none" opacity="0.10"/>
+            <rect x="1010" y="220" width="260" height="80" rx="12" stroke="#FFD600" stroke-width="1.5" fill="none" opacity="0.10"/>
+            <rect x="1010" y="420" width="260" height="80" rx="12" stroke="#00e5c0" stroke-width="1.5" fill="none" opacity="0.10"/>
+            <circle cx="400" cy="200" r="80" stroke="#00e5c0" stroke-width="2" fill="none" opacity="0.08"/>
+            <circle cx="1500" cy="800" r="120" stroke="#FFD600" stroke-width="2" fill="none" opacity="0.09"/>
+            <circle cx="1000" cy="500" r="60" stroke="#00e5c0" stroke-width="1.5" fill="none" opacity="0.07"/>
+        </svg>
+    </div>
+    <header>
+        <div class="header-left">
+            <a href="home.html" class="site-name">CODIFY</a>
+        </div>
+        <nav>
+            <div class="nav-hamburger" id="navHamburger">
+                <span></span><span></span><span></span>
+            </div>
+            <div class="nav-links">
+            <a href="#frontend">Front End</a>
+            <a href="#backend">Back End</a>
+            <a href="#cybersecurity">Cyber Security</a>
+            <a href="#datascience">Data Science</a>
+            <a href="#mobile-app">Mobile App</a>
+            <a href="#devops">DevOps</a>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <h1>Roadmaps</h1>
+
+        <!-- Front-End -->
+        <div id="frontend" class="roadmap-section">
+            <h3>▶ Front-End</h3>
+            <p>
+                If you want to become a Front-End Developer, you need to master three essential technologies: HTML, CSS, and JavaScript. These are the foundation of every website and web application.
+            </p>
+            <div class="roadmap-content">
+            <div class="roadmap-item">
+                <h4>HTML (HyperText Markup Language)</h4>
+                <p>
+                    This is the backbone of web pages. It structures content using elements like headings, paragraphs, images, and links.
+                </p>
+            </div>
+            <div class="roadmap-item">
+                <h4>CSS (Cascading Style Sheets)</h4>
+                <p>
+                    CSS controls the appearance of a webpage. It allows you to design layouts, colors, animations, and responsive designs that work on different screen sizes.
+                </p>
+            </div>
+            <div class="roadmap-item">
+                <h4>JavaScript</h4>
+                <p>
+                    This programming language makes web pages interactive. It enables you to add dynamic content, handle user input, and communicate with servers using APIs.
+                </p>
+            </div>
+            <div class="resources-section">
+                <h3>Resources</h3>
+                <ul class="resources-list">
+                    <li><input type="checkbox"><a href="https://youtu.be/kUMe1FH4CHE?si=MsCKSNBzJNJ4EtZR" target="_blank">HTML Tutorial</a></li>
+                    <li><input type="checkbox"><a href="https://youtu.be/OXGznpKZ_sA?si=DG8aT2eGPiawvBkA" target="_blank">CSS Tutorial</a></li>
+                    <li><input type="checkbox"><a href="https://youtu.be/elrMbAQSU34?si=GCPx2YKQqrJjOP9E" target="_blank">JavaScript Tutorial</a></li>
+                </ul>
+            </div>
+        </div>
+        </div>
+        <div>
+            <br>
+            <br>
+            <br>
+            <br>
+        </div>
+
+        <!-- Back-End -->
+        <div id="backend" class="roadmap-section">
+            <h3>▶ Back-End</h3>
+            <p>
+                If you want to become a Back-End Developer, you need to master three essential technologies: a server-side programming language (such as Node.js, Python, or Java), databases (such as MySQL, PostgreSQL, or MongoDB), and server management. These are the foundation of every web application's backend.
+            </p>
+            <div class="roadmap-content">
+            <div class="roadmap-item">
+                <h4>Python</h4>
+                <p>
+                    Python is a powerful and versatile language widely used in backend development. With frameworks like Django and Flask, it simplifies building secure, scalable web applications and RESTful APIs.
+                </p>
+            </div>
+            <div class="roadmap-item">
+                <h4>Java</h4>
+                <p>
+                    Java is a robust, object-oriented programming language commonly used for large-scale applications. It is the foundation of enterprise-level backend development, with frameworks like Spring Boot enabling efficient API and web service creation.
+                </p>
+            </div>
+            <div class="roadmap-item">
+                <h4>PHP (Hypertext Preprocessor)</h4>
+                <p>
+                    PHP is a server-side scripting language used to develop dynamic web applications. It enables interaction with databases, user authentication, and form handling, making it a key technology for building web backends.
+                </p>
+            </div>
+            <div class="roadmap-item">
+                <h4>Node.js</h4>
+                <p>
+                    Node.js is a JavaScript runtime that allows developers to build fast and scalable server-side applications. Combined with Express.js, it is commonly used for building real-time applications, RESTful APIs, and microservices.
+                </p>
+            </div>
+            <div class="resources-section">
+                <h3>Resources</h3>
+                <ul class="resources-list">
+                    <li><input type="checkbox"><a href="https://youtu.be/_uOrJOTKZlc?sir=ILKXaD8gVRQKYF5" target="_blank">Python Tutorial</a></li>
+                    <li><input type="checkbox"><a href="https://youtu.be/eHvMxAQSU34?sir=BCPxZYKQVJjOPBE" target="_blank">Java Tutorial</a></li>
+                    <li><input type="checkbox"><a href="https://youtu.be/BUCiSSyIGGU?sir=ipwvAMhsm3V2vxqe" target="_blank">PHP Tutorial</a></li>
+                    <li><input type="checkbox"><a href="https://youtu.be/32M1aLY6Ag?sir=BXVHHB8E7NTPJMi" target="_blank">Node.js Tutorial</a></li>
+                </ul>
+            </div>
+        </div>
+        </div>
+        <div>
+            <br>
+            <br>
+            <br>
+            <br>
+        </div>
+
+        <!-- Cyber Security -->
+        <div id="cybersecurity" class="roadmap-section">
+            <h3>▶ Cyber Security</h3>
+            <p>
+                Cyber Security is responsible for protecting systems, networks, and data from cyber threats and attacks. It ensures that sensitive information is secured, preventing unauthorized access, data breaches, and malicious activities using technologies like encryption, firewalls, and intrusion detection systems.
+            </p>
+            <div class="roadmap-content">
+            <div class="roadmap-item">
+                <h4>Introduction to Cyber Security</h4>
+                <p>
+                    This is the foundation of Cyber Security. It covers basic concepts such as cyber threats, vulnerabilities, risk management, and security best practices to protect digital systems.
+                </p>
+            </div>
+            <div class="roadmap-item">
+                <h4>Cyber Security Essentials</h4>
+                <p>
+                    This course focuses on core security principles, including encryption, authentication, firewalls, and security frameworks. It provides a strong understanding of how to secure systems and networks.
+                </p>
+            </div>
+            <div class="roadmap-item">
+                <h4>CompTIA Security+</h4>
+                <p>
+                    A widely recognized certification that covers essential security skills, including network security, threats and vulnerabilities, identity management, and security policies. It is a great starting point for IT security professionals.
+                </p>
+            </div>
+            <div class="roadmap-item">
+                <h4>Penetration Testing & Ethical Hacking</h4>
+                <p>
+                    This course teaches how to identify and exploit vulnerabilities in systems legally. It covers topics like penetration testing methodologies, ethical hacking techniques, and security assessments.
+                </p>
+            </div>
+            <div class="roadmap-item">
+                <h4>Network Security</h4>
+                <p>
+                    Focuses on securing networks by understanding firewalls, VPNs, intrusion detection/prevention systems (IDS/IPS), and network protocols. It is crucial for protecting communications and data transfers.
+                </p>
+            </div>
+            <div class="resources-section">
+                <h3>Resources</h3>
+                <ul class="resources-list">
+                    <li><input type="checkbox"><a href="https://www.youtube.com/" target="_blank">Intro to Cyber</a></li>
+                    <li><input type="checkbox"><a href="https://www.youtube.com/" target="_blank">Cyber Security Essentials</a></li>
+                    <li><input type="checkbox"><a href="https://www.youtube.com/" target="_blank">Network Security</a></li>
+                    <li><input type="checkbox"><a href="https://www.youtube.com/" target="_blank">CompTIA Security</a></li>
+                    <li><input type="checkbox"><a href="https://www.youtube.com/" target="_blank">Penetration Testing & Ethical Hacking</a></li>
+                </ul>
+            </div>
+        </div>
+        </div>
+        <div>
+            <br>
+            <br>
+            <br>
+            <br>
+        </div>
+
+        <!-- Data Science -->
+        <div id="datascience" class="roadmap-section">
+            <h3>▶ Data Science</h3>
+            <p>
+                If you want to become a Data Science Engineer, you need to master the following courses:
+            </p>
+            <div class="roadmap-content">
+            <div class="roadmap-item">
+                <h4>Python</h4>
+                <p>
+                    Python is a powerful and versatile language widely used in backend development. With frameworks like Django and Flask, it simplifies building secure, scalable web applications and RESTful APIs.
+                </p>
+            </div>
+            <div class="roadmap-item">
+                <h4>Git</h4>
+                <p>
+                    Git is a distributed version control system that helps developers track code changes, collaborate efficiently, and manage project versions. It allows branching, merging, and rollback capabilities, making it essential for team-based software development.
+                </p>
+            </div>
+            <div class="roadmap-item">
+                <h4>Data Structures</h4>
+                <p>
+                    Data Structures are fundamental concepts in computer science used to store and organize data efficiently. Common structures include arrays, linked lists, stacks, queues, trees, and graphs. Mastering data structures enables developers to optimize algorithms, improve performance, and solve complex computational problems.
+                </p>
+            </div>
+            <div class="roadmap-item">
+                <h4>SQL (Structured Query Language)</h4>
+                <p>
+                    SQL is a standardized language for managing and querying relational databases. It allows developers to store, retrieve, update, and delete data efficiently. With databases like MySQL, PostgreSQL, and SQLite, SQL ensures structured data management, making it essential for backend and data-driven applications.
+                </p>
+            </div>
+            <div class="roadmap-item">
+                <h4>Mathematics & Statistics</h4>
+                <p>
+                    Mathematics & Statistics provide the foundation for data science, machine learning, and AI. Key concepts like linear algebra, probability, calculus, and hypothesis testing help in building models, analyzing trends, and making data-driven decisions.
+                </p>
+            </div>
+            <div class="roadmap-item">
+                <h4>Data Collection</h4>
+                <p>
+                    Involves gathering, preprocessing, and organizing raw data from various sources, such as databases, APIs, and web scraping. Tools like Selenium, BeautifulSoup, and Scrapy help automate data extraction, while ETL (Extract, Transform, Load) processes ensure data quality and consistency for analysis and machine learning.
+                </p>
+            </div>
+            <div class="roadmap-item">
+                <h4>Machine Learning</h4>
+                <p>
+                    Machine Learning enables computers to learn patterns from data and make predictions without explicit programming. Using frameworks like Scikit-Learn, TensorFlow, and PyTorch, ML models can be trained for tasks like classification, regression, and clustering. Applications range from recommendation systems to fraud detection.
+                </p>
+            </div>
+            <div class="roadmap-item">
+                <h4>Deep Learning</h4>
+                <p>
+                    Deep Learning is a subset of machine learning that leverages artificial neural networks to process complex data, such as images, audio, and text. With architectures like CNNs, RNNs, and Transformers, deep learning powers advancements in AI, including computer vision, NLP, and autonomous systems.
+                </p>
+            </div>
+            <div class="roadmap-item">
+                <h4>Specialization</h4>
+                <p>
+                    Specialization in a technical field involves focusing on advanced knowledge and skills within a specific domain, such as cybersecurity, data science, AI, or web development. It allows professionals to develop expertise, stay competitive, and contribute to cutting-edge innovations in their industry.
+                </p>
+            </div>
+            <div class="roadmap-item">
+                <h4>Big Data</h4>
+                <p>
+                    Big Data refers to the processing and analysis of massive datasets that exceed traditional database capabilities. Technologies like Hadoop, Spark, and NoSQL databases enable scalable storage and real-time analytics, supporting industries in decision-making, predictive modeling, and business intelligence.
+                </p>
+            </div>
+            <div class="resources-section">
+                <h3>Resources</h3>
+                <ul class="resources-list">
+                    <li><input type="checkbox"><a href="https://www.youtube.com/" target="_blank">Python</a></li>
+                    <li><input type="checkbox"><a href="https://www.youtube.com/" target="_blank">Git</a></li>
+                    <li><input type="checkbox"><a href="https://www.youtube.com/" target="_blank">Data Structures</a></li>
+                    <li><input type="checkbox"><a href="https://www.youtube.com/" target="_blank">SQL</a></li>
+                    <li><input type="checkbox"><a href="https://www.youtube.com/" target="_blank">Mathematics & Statistics</a></li>
+                    <li><input type="checkbox"><a href="https://www.youtube.com/" target="_blank">Data Collection</a></li>
+                    <li><input type="checkbox"><a href="https://www.youtube.com/" target="_blank">Machine Learning</a></li>
+                    <li><input type="checkbox"><a href="https://www.youtube.com/" target="_blank">Deep Learning</a></li>
+                    <li><input type="checkbox"><a href="https://www.youtube.com/" target="_blank">Specialization</a></li>
+                    <li><input type="checkbox"><a href="https://www.youtube.com/" target="_blank">Big Data</a></li>
+                </ul>
+            </div>
+        </div>
+        </div>
+        <div>
+            <br>
+            <br>
+            <br>
+            <br>
+        </div>
+
+        <!-- Mobile App -->
+        <div id="mobile-app" class="roadmap-section">
+            <h3>▶ Mobile App</h3>
+            <p>
+                If you want to become a Mobile App Developer, you need to master the following courses:
+            </p>
+            <div class="roadmap-content">
+            <div class="roadmap-item">
+                <h4>HTML & CSS</h4>
+                <p>
+                    HTML and CSS form the backbone of web development, defining structure and styling for web pages. HTML provides content and elements, while CSS enhances design, responsiveness, and user experience through flexible layouts and animations.
+                </p>
+            </div>
+            <div class="roadmap-item">
+                <h4>JavaScript</h4>
+                <p>
+                    JavaScript is a dynamic programming language essential for building interactive web applications. It enables client-side scripting, DOM manipulation, and event-driven programming. With frameworks like React and Vue.js, JavaScript powers modern, scalable web applications.
+                </p>
+            </div>
+            <div class="roadmap-item">
+                <h4>TypeScript</h4>
+                <p>
+                    TypeScript is a statically typed superset of JavaScript that enhances code maintainability and scalability. It introduces strong typing, interfaces, and advanced tooling, making it ideal for large-scale applications and enterprise-level development, especially with frameworks like Angular and React.
+                </p>
+            </div>
+            <div class="roadmap-item">
+                <h4>Design Patterns</h4>
+                <p>
+                    Design Patterns are reusable solutions to common software design problems, improving code maintainability and scalability. Patterns like Singleton, Factory, MVC, and Observer help developers create robust, modular, and efficient software architectures.
+                </p>
+            </div>
+            <div class="roadmap-item">
+                <h4>React</h4>
+                <p>
+                    React is a popular JavaScript library for building dynamic and responsive user interfaces. It uses a component-based architecture and a virtual DOM for efficient rendering. With React Hooks and state management tools like Redux, developers can create scalable front-end applications.
+                </p>
+            </div>
+            <div class="roadmap-item">
+                <h4>React Native</h4>
+                <p>
+                    React Native is a cross-platform framework for building mobile applications using JavaScript and React. It allows developers to write a single codebase for both iOS and Android while leveraging native components for high performance and smooth user experiences.
+                </p>
+            </div>
+            <div class="roadmap-item">
+                <h4>Dart</h4>
+                <p>
+                    Dart is a modern, object-oriented programming language optimized for fast applications. Developed by Google, Dart is the foundation of Flutter, enabling developers to build high-performance mobile, web, and desktop applications with a single codebase.
+                </p>
+            </div>
+            <div class="roadmap-item">
+                <h4>Flutter</h4>
+                <p>
+                    Flutter is an open-source UI framework for building natively compiled applications for mobile, web, and desktop from a single codebase. It uses the Dart language and provides a rich set of customizable widgets, enabling fast development and smooth animations for visually appealing apps.
+                </p>
+            </div>
+            <div class="resources-section">
+                <h3>Resources</h3>
+                <ul class="resources-list">
+                    <li><input type="checkbox"><a href="https://www.youtube.com/" target="_blank">HTML & CSS</a></li>
+                    <li><input type="checkbox"><a href="https://www.youtube.com/" target="_blank">JavaScript</a></li>
+                    <li><input type="checkbox"><a href="https://www.youtube.com/" target="_blank">TypeScript</a></li>
+                    <li><input type="checkbox"><a href="https://www.youtube.com/" target="_blank">Design Patterns</a></li>
+                    <li><input type="checkbox"><a href="https://www.youtube.com/" target="_blank">React</a></li>
+                    <li><input type="checkbox"><a href="https://www.youtube.com/" target="_blank">React Native</a></li>
+                    <li><input type="checkbox"><a href="https://www.youtube.com/" target="_blank">Dart</a></li>
+                    <li><input type="checkbox"><a href="https://www.youtube.com/" target="_blank">Flutter</a></li>
+                </ul>
+            </div>
+        </div>
+        </div>
+        <div>
+            <br>
+            <br>
+            <br>
+            <br>
+        </div>
+
+        <!-- DevOps -->
+        <div id="devops" class="roadmap-section">
+            <h3>▶ DevOps</h3>
+            <p>
+                If you want to become a DevOps Engineer, you need to master the following courses:
+            </p>
+            <div class="roadmap-content">
+            <div class="roadmap-item">
+                <h4>Linux</h4>
+                <p>
+                    Linux is an open-source operating system widely used in servers, cloud environments, and embedded systems. It provides stability, security, and flexibility, making it a preferred choice for developers, system administrators, and DevOps engineers.
+                </p>
+            </div>
+            <div class="roadmap-item">
+                <h4>Networking</h4>
+                <p>
+                    Networking is the backbone of IT infrastructure, enabling communication between devices and systems. Key concepts include IP addressing, DNS, firewalls, VPNs, and protocols like TCP/IP. Strong networking knowledge is essential for cloud computing, security, and DevOps.
+                </p>
+            </div>
+            <div class="roadmap-item">
+                <h4>Python</h4>
+                <p>
+                    Python is a versatile programming language used in automation, data science, web development, and cybersecurity. With frameworks like Django, Flask, and libraries like NumPy and Pandas, Python simplifies complex tasks, making it a favorite among developers.
+                </p>
+            </div>
+            <div class="roadmap-item">
+                <h4>Git</h4>
+                <p>
+                    Git is a distributed version control system that allows developers to track changes, collaborate efficiently, and manage project versions. It is widely used in software development to facilitate teamwork and code management through repositories like GitHub and GitLab.
+                </p>
+            </div>
+            <div class="roadmap-item">
+                <h4>Docker</h4>
+                <p>
+                    Docker is a containerization platform that allows developers to package applications and dependencies into lightweight, portable containers. It ensures consistency across different environments, streamlining deployment and scaling processes.
+                </p>
+            </div>
+            <div class="roadmap-item">
+                <h4>Jenkins</h4>
+                <p>
+                    Jenkins is an open-source automation server used for continuous integration and continuous deployment (CI/CD). It enables developers to automate software testing and delivery pipelines, ensuring faster and more reliable application releases.
+                </p>
+            </div>
+            <div class="roadmap-item">
+                <h4>AWS (Amazon Web Services)</h4>
+                <p>
+                    AWS is a leading cloud computing platform offering a wide range of services, including computing, storage, networking, databases, and AI. It enables businesses to build, scale, and deploy applications with high availability and security.
+                </p>
+            </div>
+            <div class="roadmap-item">
+                <h4>Kubernetes</h4>
+                <p>
+                    Kubernetes is a container orchestration platform that automates the deployment, scaling, and management of containerized applications. It enables efficient resource utilization, fault tolerance, and high availability, making it essential for cloud-native applications.
+                </p>
+            </div>
+            <div class="roadmap-item">
+                <h4>Nginx</h4>
+                <p>
+                    Nginx is a high-performance web server, reverse proxy, and load balancer known for its speed and scalability. It is commonly used to serve static content, optimize traffic distribution, and enhance security in web applications.
+                </p>
+            </div>
+            <div class="roadmap-item">
+                <h4>Ansible</h4>
+                <p>
+                    Ansible is an open-source automation tool used for configuration management, application deployment, and infrastructure orchestration. It operates agentlessly and uses YAML-based playbooks, making it simple to automate IT workflows across various environments.
+                </p>
+            </div>
+            <div class="roadmap-item">
+                <h4>Terraform</h4>
+                <p>
+                    Terraform is an infrastructure-as-code (IaC) tool that allows developers to define and provision cloud resources using declarative configuration files. It supports multiple cloud providers like AWS, Azure, and Google Cloud, enabling automation, scalability, and consistency in infrastructure management.
+                </p>
+            </div>
+            <div class="resources-section">
+                <h3>Resources</h3>
+                <ul class="resources-list">
+                    <li><input type="checkbox"><a href="https://www.youtube.com/" target="_blank">Linux</a></li>
+                    <li><input type="checkbox"><a href="https://www.youtube.com/" target="_blank">Networking</a></li>
+                    <li><input type="checkbox"><a href="https://www.youtube.com/" target="_blank">Python</a></li>
+                    <li><input type="checkbox"><a href="https://www.youtube.com/" target="_blank">Git</a></li>
+                    <li><input type="checkbox"><a href="https://www.youtube.com/" target="_blank">Docker</a></li>
+                    <li><input type="checkbox"><a href="https://www.youtube.com/" target="_blank">Jenkins</a></li>
+                    <li><input type="checkbox"><a href="https://www.youtube.com/" target="_blank">AWS</a></li>
+                    <li><input type="checkbox"><a href="https://www.youtube.com/" target="_blank">Kubernetes</a></li>
+                    <li><input type="checkbox"><a href="https://www.youtube.com/" target="_blank">Nginx</a></li>
+                    <li><input type="checkbox"><a href="https://www.youtube.com/" target="_blank">Ansible</a></li>
+                    <li><input type="checkbox"><a href="https://www.youtube.com/" target="_blank">Terraform</a></li>
+                </ul>
+            </div>
+            </div>
+        </div>
+        <div>
+            <br>
+            <br>
+            <br>
+            <br>
+        </div>
+    </div>
+</body>
+</html>

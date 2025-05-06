@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Codify - TRACKS</title>
+    <style>
+        body {
+            font-family: 'Cairo', 'Segoe UI', Arial, sans-serif;
+            color: #f6f8fa;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #181c2b 0%, #232b47 60%, #1a2a3a 100%);
+            position: relative;
+            overflow-x: hidden;
+        }
+        .tech-bg-tracks {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.22;
+        }
+        .fade-out {
+            opacity: 0;
+            transform: scale(0.9);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        header {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 28px 12px 38px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            background: none;
+        }
+        .site-name {
+            font-size: 2.3rem;
+            color: #00e5c0;
+            font-weight: bold;
+            text-decoration: none;
+            letter-spacing: 2.5px;
+            text-shadow: 0 2px 16px #00e5c055;
+            transition: color 0.2s;
+        }
+        .site-name:hover {
+            color: #FFD600;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+            padding: 0 16px;
+            position: relative;
+            z-index: 1;
+        }
+        .main-title {
+            font-size: 3rem;
+            color: #00e5c0;
+            font-weight: bold;
+            margin-top: 120px;
+            margin-bottom: 16px;
+            letter-spacing: 2.5px;
+            text-shadow: 0 2px 24px #00e5c055;
+        }
+        .main-desc {
+            font-size: 1.25rem;
+            color: #e0e6f6;
+            margin-bottom: 48px;
+            line-height: 1.7;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+            white-space: pre-line;
+        }
+        .tracks-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 38px;
+            margin-bottom: 60px;
+        }
+        .track-card {
+            background: rgba(36, 48, 78, 0.93);
+            padding: 36px 28px 28px 28px;
+            border-radius: 22px;
+            box-shadow: 0 6px 32px #00e5c022, 0 1.5px 0 #FFD60011 inset;
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            transition: transform 0.18s, box-shadow 0.18s;
+        }
+        .track-card:hover {
+            transform: translateY(-7px) scale(1.03);
+            box-shadow: 0 12px 40px #00e5c055, 0 1.5px 0 #FFD60022 inset;
+        }
+        .track-title {
+            color: #FFD600;
+            font-size: 1.35rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+        .track-desc {
+            color: #CCD6F6;
+            font-size: 1.05rem;
+            margin-bottom: 18px;
+        }
+        .track-btn {
+            background: linear-gradient(90deg, #3fa99c 60%, #c9b458 100%);
+            color: #f6f8fa;
+            font-size: 1.08rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 22px;
+            padding: 10px 28px;
+            box-shadow: 0 2px 8px #3fa99c33;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+            margin-top: 18px;
+        }
+        .track-btn:hover {
+            background: linear-gradient(90deg, #c9b458 40%, #3fa99c 100%);
+            color: #FFD600;
+            box-shadow: 0 4px 16px #c9b45855;
+            text-decoration: none;
+        }
+        @media (max-width: 900px) {
+            .main-title { font-size: 2.1rem; margin-top: 90px; }
+            .tracks-grid { gap: 22px; }
+        }
+
+        /* الروبوت المتحرك */
+        .robot-container {
+            position: fixed;
+            left: 38px;
+            top: 100px;
+            width: 100px;
+            height: 140px;
+            z-index: 999;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        /* الأذرع */
+        .robot-arm {
+            position: absolute;
+            width: 12px;
+            height: 45px;
+            background: linear-gradient(135deg, #2C3E50, #3498db);
+            border-radius: 6px;
+            box-shadow: 0 0 10px rgba(0, 229, 192, 0.3);
+        }
+
+        .robot-arm.left {
+            left: -20px;
+            top: 30%;
+            transform-origin: top center;
+            animation: swingLeft 3s ease-in-out infinite;
+        }
+
+        .robot-arm.right {
+            right: -20px;
+            top: 30%;
+            transform-origin: top center;
+            animation: swingRight 3s ease-in-out infinite;
+        }
+
+        @keyframes swingLeft {
+            0%, 100% { transform: rotate(-5deg); }
+            50% { transform: rotate(15deg); }
+        }
+
+        @keyframes swingRight {
+            0%, 100% { transform: rotate(5deg); }
+            50% { transform: rotate(-15deg); }
+        }
+
+        /* الأرجل */
+        .robot-leg {
+            position: absolute;
+            width: 16px;
+            height: 35px;
+            background: linear-gradient(135deg, #2C3E50, #3498db);
+            border-radius: 6px;
+            bottom: -30px;
+            box-shadow: 0 0 10px rgba(0, 229, 192, 0.3);
+        }
+
+        .robot-leg.left {
+            left: 25%;
+            animation: walkLeft 3s ease-in-out infinite;
+        }
+
+        .robot-leg.right {
+            right: 25%;
+            animation: walkRight 3s ease-in-out infinite;
+        }
+
+        @keyframes walkLeft {
+            0%, 100% { transform: rotate(-5deg); }
+            50% { transform: rotate(5deg); }
+        }
+
+        @keyframes walkRight {
+            0%, 100% { transform: rotate(5deg); }
+            50% { transform: rotate(-5deg); }
+        }
+
+        .robot {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: all 0.3s ease;
+        }
+
+        .robot-body {
+            width: 100%;
+            height: 75%;
+            position: absolute;
+            background: linear-gradient(135deg, #2C3E50, #3498db);
+            border-radius: 20px;
+            box-shadow: 
+                0 5px 15px rgba(0, 229, 192, 0.4),
+                0 0 30px rgba(0, 229, 192, 0.2),
+                inset 0 0 15px rgba(52, 152, 219, 0.5);
+            overflow: hidden;
+        }
+
+        .robot-face {
+            position: absolute;
+            width: 80%;
+            height: 60%;
+            top: 20%;
+            left: 10%;
+            background: rgba(0, 229, 192, 0.1);
+            border-radius: 15px;
+            backdrop-filter: blur(5px);
+        }
+
+        .robot-eye {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background: #FFD600;
+            border-radius: 50%;
+            box-shadow: 0 0 20px #FFD600;
+            animation: glow 2s infinite;
+        }
+
+        .robot-eye.left {
+            top: 40%;
+            left: 25%;
+        }
+
+        .robot-eye.right {
+            top: 40%;
+            right: 25%;
+        }
+
+        .robot-antenna {
+            position: absolute;
+            width: 6px;
+            height: 16px;
+            background: #00e5c0;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 3px;
+            box-shadow: 0 0 15px #00e5c0;
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 20px #FFD600; }
+            50% { box-shadow: 0 0 30px #FFD600, 0 0 40px #FFD600; }
+        }
+
+        /* تأثيرات الحركة */
+        .robot-container:hover {
+            transform: translateY(-5px) scale(1.05);
+        }
+
+        .robot-container:hover .robot-arm.left { animation: swingLeft 1.5s ease-in-out infinite; }
+        .robot-container:hover .robot-arm.right { animation: swingRight 1.5s ease-in-out infinite; }
+        .robot-container:hover .robot-leg.left { animation: walkLeft 1.5s ease-in-out infinite; }
+        .robot-container:hover .robot-leg.right { animation: walkRight 1.5s ease-in-out infinite; }
+
+        /* تحديث حركة القفز */
+        @keyframes jump {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+    </style>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            document.body.classList.add("loaded");
+            document.querySelectorAll("a").forEach(link => {
+                link.addEventListener("click", function (e) {
+                    e.preventDefault();
+                    let targetUrl = this.href;
+                    document.body.classList.add("fade-out");
+                    setTimeout(() => {
+                        window.location.href = targetUrl;
+                    }, 500);
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="tech-bg-tracks">
+        <svg width="100%" height="100%" viewBox="0 0 1920 1080" fill="none" xmlns="http://www.w3.org/2000/svg" style="position:absolute;top:0;left:0;">
+            <defs>
+                <linearGradient id="circuitLineTracks" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0%" stop-color="#00e5c0" stop-opacity="0.18"/>
+                    <stop offset="100%" stop-color="#FFD600" stop-opacity="0.13"/>
+                </linearGradient>
+            </defs>
+            <polyline points="100,100 300,100 320,180 600,180" stroke="url(#circuitLineTracks)" stroke-width="2" fill="none"/>
+            <polyline points="100,300 250,300 270,380 600,380" stroke="url(#circuitLineTracks)" stroke-width="2" fill="none"/>
+            <polyline points="100,500 350,500 370,580 600,580" stroke="url(#circuitLineTracks)" stroke-width="2" fill="none"/>
+            <polyline points="1820,200 1620,200 1600,280 1300,280" stroke="url(#circuitLineTracks)" stroke-width="2" fill="none"/>
+            <polyline points="1820,400 1670,400 1650,480 1300,480" stroke="url(#circuitLineTracks)" stroke-width="2" fill="none"/>
+            <polyline points="1820,600 1550,600 1530,680 1300,680" stroke="url(#circuitLineTracks)" stroke-width="2" fill="none"/>
+            <rect x="650" y="120" width="260" height="80" rx="12" stroke="#00e5c0" stroke-width="1.5" fill="none" opacity="0.10"/>
+            <rect x="1010" y="220" width="260" height="80" rx="12" stroke="#FFD600" stroke-width="1.5" fill="none" opacity="0.10"/>
+            <rect x="1010" y="420" width="260" height="80" rx="12" stroke="#00e5c0" stroke-width="1.5" fill="none" opacity="0.10"/>
+            <circle cx="400" cy="200" r="80" stroke="#00e5c0" stroke-width="2" fill="none" opacity="0.08"/>
+            <circle cx="1500" cy="800" r="120" stroke="#FFD600" stroke-width="2" fill="none" opacity="0.09"/>
+            <circle cx="1000" cy="500" r="60" stroke="#00e5c0" stroke-width="1.5" fill="none" opacity="0.07"/>
+        </svg>
+    </div>
+    <header>
+        <a href="home.html" class="site-name">CODIFY</a>
+    </header>
+    <div class="container">
+        <div class="main-title">Tracks</div>
+        <div class="main-desc">Explore different roadmaps and shape your learning path</div>
+        <div class="tracks-grid">
+            <div class="track-card">
+                <div class="track-title">Front-End</div>
+                <div class="track-desc">The Front-End is responsible for designing and developing the visual and interactive aspects of a website or web application. It ensures that users can navigate and interact with the site smoothly by implementing HTML, CSS, and JavaScript. A Front-End developer focuses on responsiveness, accessibility, and performance to create a seamless user experience. They also collaborate with UI/UX designers to bring designs to life and with Back-End developers to connect the interface with data and functionality. Ultimately, Front-End development plays a crucial role in making websites both visually appealing and highly functional.</div>
+                <a href="roadmaps.html#frontend" class="track-btn">FRONT-END</a>
+            </div>
+            <div class="track-card">
+                <div class="track-title">Back-End</div>
+                <div class="track-desc">The Back-End is responsible for managing the server, database, and application logic that power a website or web application. It ensures that data is processed, stored, and retrieved efficiently using technologies like Node.js, Python, PHP, or Java. A Back-End developer focuses on security, performance, and scalability to handle user requests smoothly. They collaborate with Front-End developers to connect the user interface with the server-side logic and with database administrators to manage data storage. Ultimately, Back-End development plays a crucial role in ensuring websites function correctly and handle data securely.</div>
+                <a href="roadmaps.html#backend" class="track-btn">BACK-END</a>
+            </div>
+            <div class="track-card">
+                <div class="track-title">Cyber Security</div>
+                <div class="track-desc">Cybersecurity is responsible for protecting systems, networks, and data from cyber threats, ensuring the confidentiality, integrity, and availability of information. It involves implementing security measures such as encryption, firewalls, and intrusion detection to prevent attacks. Cybersecurity professionals focus on identifying vulnerabilities, mitigating risks, and responding to security incidents using tools like SIEM, penetration testing, and threat intelligence. They collaborate with developers, IT teams, and businesses to create secure infrastructures and comply with industry standards. Ultimately, cybersecurity plays a crucial role in safeguarding digital assets and maintaining trust in technology.</div>
+                <a href="roadmaps.html#cybersecurity" class="track-btn">CYBER SECURITY</a>
+            </div>
+            <div class="track-card">
+                <div class="track-title">Data Science</div>
+                <div class="track-desc">Data Science is responsible for extracting meaningful insights from large volumes of structured and unstructured data using statistical methods, machine learning, and data visualization. It involves data collection, cleaning, analysis, and modeling with technologies like Python, R, SQL, and big data frameworks. A Data Scientist focuses on discovering patterns, making predictions, and driving data-driven decisions for businesses. They collaborate with engineers, analysts, and stakeholders to solve complex problems and improve efficiency. Ultimately, Data Science plays a crucial role in transforming raw data into actionable intelligence for various industries.</div>
+                <a href="roadmaps.html#datascience" class="track-btn">DATA SCIENCE</a>
+            </div>
+            <div class="track-card">
+                <div class="track-title">Mobile App</div>
+                <div class="track-desc">Mobile App Development is responsible for building cross-platform applications that run on both iOS and Android devices using frameworks like React Native and Flutter. It involves designing user interfaces, handling performance optimization, and integrating APIs to provide a seamless user experience. A Mobile App Developer focuses on creating responsive, scalable, and feature-rich applications while ensuring compatibility across different devices. They collaborate with designers, back-end developers, and QA testers to refine app functionality. Ultimately, Mobile App Development plays a crucial role in delivering high-quality mobile experiences that enhance user engagement and business growth.</div>
+                <a href="roadmaps.html#mobile-app" class="track-btn">MOBILE APP</a>
+            </div>
+            <div class="track-card">
+                <div class="track-title">DevOps</div>
+                <div class="track-desc">DevOps is responsible for bridging the gap between software development and IT operations, ensuring faster and more reliable software delivery. It involves automating infrastructure, continuous integration and deployment (CI/CD), and monitoring system performance using tools like Docker, Kubernetes, Jenkins, and Terraform. A DevOps engineer focuses on improving collaboration, efficiency, and scalability by integrating development and operations processes. They work closely with developers, system administrators, and security teams to optimize deployment pipelines and ensure system reliability. Ultimately, DevOps plays a crucial role in streamlining software development, reducing downtime, and enhancing productivity.</div>
+                <a href="roadmaps.html#devops" class="track-btn">DEVOPS</a>
+            </div>
+        </div>
+    </div>
+    <div class="robot-container">
+        <div class="robot">
+            <div class="robot-antenna"></div>
+            <div class="robot-arm left"></div>
+            <div class="robot-arm right"></div>
+            <div class="robot-body">
+                <div class="robot-face">
+                    <div class="robot-eye left"></div>
+                    <div class="robot-eye right"></div>
+                </div>
+            </div>
+            <div class="robot-leg left"></div>
+            <div class="robot-leg right"></div>
+        </div>
+    </div>
+
+    <script>
+        // تفاعلات الروبوت مع الماوس
+        const robotContainer = document.querySelector('.robot-container');
+        const robot = document.querySelector('.robot');
+
+        // تحريك الروبوت مع حركة الماوس
+        document.addEventListener('mousemove', (e) => {
+            const mouseX = e.clientX / window.innerWidth - 0.5;
+            const mouseY = e.clientY / window.innerHeight - 0.5;
+            
+            if (Math.abs(e.clientX - robotContainer.getBoundingClientRect().left) < 200 &&
+                Math.abs(e.clientY - robotContainer.getBoundingClientRect().top) < 200) {
+                robot.style.transform = `
+                    rotateY(${mouseX * 30}deg)
+                    rotateX(${-mouseY * 30}deg)
+                `;
+            }
+        });
+
+        // تفاعل الروبوت مع السكرول
+        window.addEventListener('scroll', () => {
+            const scrollPercent = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight));
+            
+            robot.style.transform = `
+                rotateY(${Math.sin(scrollPercent * Math.PI * 2) * 20}deg)
+                rotateX(${Math.cos(scrollPercent * Math.PI * 2) * 20}deg)
+                translateY(${Math.sin(scrollPercent * Math.PI) * 10}px)
+            `;
+        });
+
+        // تفاعل عند النقر على الروبوت
+        robotContainer.addEventListener('click', () => {
+            robot.style.animation = 'none';
+            robot.offsetHeight; // trigger reflow
+            robot.style.animation = 'jump 0.5s ease';
+        });
+    </script>
+</body>
+</html>

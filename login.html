@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Codify - منصة تعلم البرمجة</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #00e5c0;
+            --dark-bg: #0a192f;
+            --card-bg: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--dark-bg), #1a365d);
+            color: white;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            right: 0;
+            left: 0;
+            padding: 1rem 5%;
+            background: rgba(10, 25, 47, 0.95);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .hero {
+            padding: 8rem 5% 4rem;
+            text-align: center;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: radial-gradient(circle at center, rgba(0,229,192,0.1) 0%, transparent 60%);
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, white, var(--primary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            line-height: 1.6;
+        }
+
+        .cta-button {
+            background: var(--primary-color);
+            color: var(--dark-bg);
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,229,192,0.2);
+        }
+
+        .features {
+            padding: 4rem 5%;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .feature-card i {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .stats {
+            padding: 4rem 5%;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            text-align: center;
+            background: rgba(0,229,192,0.05);
+        }
+
+        .stat-item h3 {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .join-section {
+            padding: 6rem 5%;
+            text-align: center;
+            background: radial-gradient(circle at center, rgba(0,229,192,0.1) 0%, transparent 60%);
+        }
+
+        .join-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 1rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .features {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="#" class="logo">Codify</a>
+        <div class="nav-links">
+            <a href="#features">المميزات</a>
+            <a href="#stats">الإحصائيات</a>
+            <a href="Login&Signup.html">تسجيل الدخول</a>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <h1>ابدأ رحلتك في عالم البرمجة</h1>
+        <p>منصة Codify هي بوابتك لتعلم البرمجة بطريقة تفاعلية وممتعة. تعلم من خلال المشاريع العملية وتحديات البرمجة وتنافس مع المبرمجين الآخرين.</p>
+        <a href="Login&Signup.html" class="cta-button">سجل الآن مجاناً</a>
+    </section>
+
+    <section id="features" class="features">
+        <div class="feature-card">
+            <i class="fas fa-laptop-code"></i>
+            <h3>تعلم تفاعلي</h3>
+            <p>تعلم البرمجة من خلال مشاريع عملية وتحديات تفاعلية تساعدك على تطوير مهاراتك بشكل فعال.</p>
+        </div>
+        <div class="feature-card">
+            <i class="fas fa-users"></i>
+            <h3>مجتمع نشط</h3>
+            <p>انضم إلى مجتمع من المبرمجين المتحمسين، تبادل الخبرات وتعلم من تجارب الآخرين.</p>
+        </div>
+        <div class="feature-card">
+            <i class="fas fa-trophy"></i>
+            <h3>نظام المنافسة</h3>
+            <p>تنافس مع المبرمجين الآخرين، اكسب النقاط وارتقِ في لوحة المتصدرين.</p>
+        </div>
+    </section>
+
+    <section id="stats" class="stats">
+        <div class="stat-item">
+            <h3>+1000</h3>
+            <p>طالب مسجل</p>
+        </div>
+        <div class="stat-item">
+            <h3>+50</h3>
+            <p>مشروع عملي</p>
+        </div>
+        <div class="stat-item">
+            <h3>+100</h3>
+            <p>تحدي برمجي</p>
+        </div>
+        <div class="stat-item">
+            <h3>+200</h3>
+            <p>شهادة أُصدرت</p>
+        </div>
+    </section>
+
+    <section class="join-section">
+        <h2>ابدأ رحلتك اليوم</h2>
+        <p>انضم إلى آلاف المبرمجين الذين يطورون مهاراتهم مع Codify</p>
+        <a href="Login&Signup.html" class="cta-button">سجل الآن</a>
+    </section>
+
+    <script>
+        // Add smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html> 
