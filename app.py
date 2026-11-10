@@ -40,7 +40,7 @@ def after_request(response):
 
 # إعدادات التطبيق
 app.config.update(
-    SECRET_KEY='your-secret-key-here',
+    SECRET_KEY=os.environ.get('SECRET_KEY', 'change-me-in-production'),
     SQLALCHEMY_DATABASE_URI='sqlite:///codify.db',
     SQLALCHEMY_TRACK_MODIFICATIONS=False,
     
@@ -49,8 +49,8 @@ app.config.update(
     MAIL_PORT=587,
     MAIL_USE_TLS=True,
     MAIL_USE_SSL=False,
-    MAIL_USERNAME='husseinabutaleb4509@gmail.com',
-    MAIL_PASSWORD='*REMOVED**',
+    MAIL_USERNAME=os.environ.get('MAIL_USERNAME', ''),
+    MAIL_PASSWORD=os.environ.get('MAIL_PASSWORD', ''),
     MAIL_DEFAULT_SENDER=('Codify', 'husseinabutaleb4509@gmail.com'),
     WTF_CSRF_ENABLED=False
 )
